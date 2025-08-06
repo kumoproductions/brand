@@ -1,0 +1,12 @@
+{
+    "name": "@kumoproductions/branding",
+    "version": "1.0.0",
+    "description": "Official branding assets for kumo.productions™, including logos, typography, color variables, and Tailwind presets.",
+    "license": "Proprietary",
+    "author": "Tomoya Eguchi",
+    "homepage": "https://github.com/kumoproductions/branding",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kumoproductions/branding.git"
+    }
+}
