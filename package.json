@@ -8,5 +8,15 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/kumoproductions/branding.git"
+    },
+    "scripts": {
+        "build": "node scripts/svg-to-images.js",
+        "deploy": "node scripts/deploy-to-r2.js"
+    },
+    "devDependencies": {
+        "@aws-sdk/client-s3": "^3.490.0",
+        "@aws-sdk/credential-providers": "^3.490.0",
+        "dotenv": "^16.3.1",
+        "sharp": "^0.33.0"
     }
 }
