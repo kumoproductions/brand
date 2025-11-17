@@ -39,7 +39,26 @@ async function convertSvgToImages(svgPath) {
   }
   
   const [, viewBox] = viewBoxMatch;
-  const [x, y, width, height] = viewBox.split(/\s+/).map(Number);
+  // Normalize commas and spaces, split, trim, and parse
+  const values = viewBox.split(/[,\s]+/)
+    .map(str => str.trim())
+    .filter(str => str.length > 0)
+    .map(str => parseFloat(str));
+  
+  // Validate: must have exactly 4 numeric values
+  if (values.length !== 4) {
+    console.warn(`Warning: Invalid viewBox format in ${svgPath} (expected 4 values, got ${values.length}), skipping...`);
+    return;
+  }
+  
+  // Check for NaN values
+  const hasNaN = values.some(val => isNaN(val));
+  if (hasNaN) {
+    console.warn(`Warning: Invalid numeric values in viewBox "${viewBox}" in ${svgPath}, skipping...`);
+    return;
+  }
+  
+  const [x, y, width, height] = values;
   const aspectRatio = height / width;
   
   // 出力ディレクトリを決定

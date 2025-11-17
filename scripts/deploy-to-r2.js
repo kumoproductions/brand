@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { S3Client, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
 
 // 環境変数から設定を取得
@@ -44,10 +45,9 @@ const EXCLUDE_PATTERNS = [
   '.gitignore',
 ];
 
-// アップロード対象のファイル拡張子
+// アップロード対象のファイル拡張子（画像ファイルのみ）
 const ALLOWED_EXTENSIONS = [
   '.png', '.jpg', '.jpeg', '.webp', '.svg', '.ico',
-  '.json', '.xml', '.webmanifest', '.typestyle', '.mjk',
 ];
 
 /**
@@ -116,6 +116,29 @@ function getContentType(filePath) {
 }
 
 /**
+ * ファイルのMD5ハッシュを計算
+ */
+function computeFileHash(filePath) {
+  const fileContent = fs.readFileSync(filePath);
+  return crypto.createHash('md5').update(fileContent).digest('hex');
+}
+
+/**
+ * ETagからハッシュ値を抽出（引用符を削除し、マルチパートETagを処理）
+ */
+function extractHashFromETag(etag) {
+  if (!etag) return null;
+  // 引用符を削除
+  let hash = etag.replace(/^"|"$/g, '');
+  // マルチパートアップロードの場合、ETagは "-数字" の形式になる
+  // MD5ハッシュと一致しないため、nullを返す
+  if (hash.includes('-')) {
+    return null;
+  }
+  return hash;
+}
+
+/**
  * ファイルがR2に存在するかチェック（オプション：差分アップロード用）
  */
 async function fileExistsInR2(key) {
@@ -144,22 +167,34 @@ async function uploadFile(filePath, force = false) {
   if (!force) {
     const exists = await fileExistsInR2(key);
     if (exists) {
-      // ファイルサイズと最終更新日時を比較（簡易チェック）
+      // ローカルファイルのMD5ハッシュを計算
+      const localHash = computeFileHash(filePath);
       const localStat = fs.statSync(filePath);
+      
       try {
         const headResult = await s3Client.send(new HeadObjectCommand({
           Bucket: R2_BUCKET_NAME,
           Key: key,
         }));
         
-        // サイズが同じで、ローカルの方が新しい場合はスキップ
-        if (headResult.ContentLength === localStat.size && 
+        // ETagからハッシュ値を抽出
+        const remoteHash = extractHashFromETag(headResult.ETag);
+        
+        // ETagが利用可能で、ローカルハッシュと一致する場合はスキップ
+        if (remoteHash && remoteHash === localHash) {
+          return { skipped: true, key };
+        }
+        
+        // ETagが利用できない場合（マルチパートアップロードなど）は
+        // サイズとLastModifiedをフォールバックとして使用
+        if (!remoteHash && 
+            headResult.ContentLength === localStat.size && 
             headResult.LastModified && 
             new Date(headResult.LastModified) >= localStat.mtime) {
           return { skipped: true, key };
         }
       } catch (error) {
-        // エラーが発生した場合はアップロードを続行
+        // HeadObjectエラーが発生した場合はアップロードを続行
       }
     }
   }
@@ -174,7 +209,7 @@ async function uploadFile(filePath, force = false) {
     ContentType: contentType,
     // Cache-Controlヘッダーを設定（画像ファイルの場合）
     ...(contentType.startsWith('image/') && {
-      CacheControl: 'public, max-age=31536000, immutable',
+      CacheControl: 'public, max-age=3600, must-revalidate',
     }),
   }));
   
