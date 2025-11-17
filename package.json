@@ -8,5 +8,11 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/kumoproductions/branding.git"
+    },
+    "scripts": {
+        "build:images": "node scripts/svg-to-images.js"
+    },
+    "devDependencies": {
+        "sharp": "^0.33.0"
     }
 }
