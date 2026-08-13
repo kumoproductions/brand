@@ -1,0 +1,43 @@
+<!-- @dsCard group="Components" viewport="700x330" name="Forms" subtitle="Input / Select / Checkbox / Radio / Switch" -->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+<script>window.exports={};window.module={exports:window.exports};window.require=function(n){return ({react:window.React,'react-dom':window.ReactDOM})[n]||window.React;};</script>
+<style>body{margin:0;background:var(--surface-page)}</style><script>(function(){var f=new URLSearchParams(location.search).get('theme');if(f==='dark')document.documentElement.setAttribute('data-theme','dark');if(!f)window.addEventListener('message',function(e){if(e.data&&e.data.kumoTheme)document.documentElement.setAttribute('data-theme',e.data.kumoTheme==='dark'?'dark':'');});})();</script>
+</head><body>
+<div id="root"></div>
+<script type="text/babel" src="./Input.jsx"></script>
+<script type="text/babel" src="./Select.jsx"></script>
+<script type="text/babel" src="./Checkbox.jsx"></script>
+<script type="text/babel" src="./Radio.jsx"></script>
+<script type="text/babel" src="./Switch.jsx"></script>
+<script type="text/babel">
+const { Input, Select, Checkbox, Radio, Switch } = window.exports;
+function Demo(){
+  const [email, setEmail] = React.useState('');
+  const [fmt, setFmt] = React.useState('16:9');
+  const [subs, setSubs] = React.useState(true);
+  const [auto, setAuto] = React.useState(false);
+  const [ratio, setRatio] = React.useState('16:9');
+  return <div style={{padding:20, display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
+    <Input value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@kumo.productions" />
+    <Select value={fmt} onChange={e=>setFmt(e.target.value)} options={['16:9','CINEMASCOPE','1:1','9:16']} />
+    <Input invalid value="motion@" onChange={()=>{}} />
+    <Input disabled value="Read only" onChange={()=>{}} />
+    <div style={{display:'flex', gap:16, alignItems:'center', flexWrap:'wrap'}}>
+      <Checkbox checked={subs} onChange={setSubs} label="Subtitles" />
+      <Checkbox checked={false} onChange={()=>{}} label="Loop" />
+      <Checkbox disabled label="Locked" />
+    </div>
+    <div style={{display:'flex', gap:16, alignItems:'center', flexWrap:'wrap'}}>
+      <Radio name="r" value="16:9" checked={ratio==='16:9'} onChange={setRatio} label="16:9" />
+      <Radio name="r" value="scope" checked={ratio==='scope'} onChange={setRatio} label="Scope" />
+      <Switch checked={auto} onChange={setAuto} label="Auto render" />
+    </div>
+  </div>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

@@ -1,22 +1,46 @@
 {
-    "name": "@kumoproductions/branding",
-    "version": "1.0.0",
-    "description": "Official branding assets for kumo.productions™, including logos, typography, color variables, and Tailwind presets.",
-    "license": "Proprietary",
-    "author": "Tomoya Eguchi",
-    "homepage": "https://github.com/kumoproductions/branding",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/kumoproductions/branding.git"
-    },
-    "scripts": {
-        "build": "node scripts/svg-to-images.js",
-        "deploy": "node scripts/deploy-to-r2.js"
-    },
-    "devDependencies": {
-        "@aws-sdk/client-s3": "^3.490.0",
-        "@aws-sdk/credential-providers": "^3.490.0",
-        "dotenv": "^16.3.1",
-        "sharp": "^0.33.0"
-    }
+  "name": "@kumoproductions/branding",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Official branding assets and brand portal for kumo.productions™.",
+  "homepage": "https://github.com/kumoproductions/branding",
+  "license": "Proprietary",
+  "author": "Tomoya Eguchi",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kumoproductions/branding.git"
+  },
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "typecheck": "turbo typecheck",
+    "prepare": "lefthook install",
+    "assets:build": "node scripts/svg-to-images.js",
+    "assets:deploy": "node scripts/deploy-to-r2.js"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.490.0",
+    "@aws-sdk/credential-providers": "^3.490.0",
+    "dotenv": "^16.3.1",
+    "lefthook": "^2.1.10",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
+    "portless": "^0.15.5",
+    "sharp": "^0.33.0",
+    "turbo": "^2.10.9",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "lefthook",
+      "sharp",
+      "esbuild"
+    ]
+  }
 }

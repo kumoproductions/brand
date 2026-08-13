@@ -1,0 +1,39 @@
+---
+import Sidebar from '../components/Sidebar.astro';
+import ColorCombinations from '../components/sections/ColorCombinations.astro';
+import ColorStyle from '../components/sections/ColorStyle.astro';
+import DesignTokens from '../components/sections/DesignTokens.astro';
+import Examples from '../components/sections/Examples.astro';
+import LogoSystems from '../components/sections/LogoSystems.astro';
+import Logotype from '../components/sections/Logotype.astro';
+import Overview from '../components/sections/Overview.astro';
+import SymbolCentral from '../components/sections/SymbolCentral.astro';
+import SymbolIncorrect from '../components/sections/SymbolIncorrect.astro';
+import SymbolSystems from '../components/sections/SymbolSystems.astro';
+import Typography from '../components/sections/Typography.astro';
+import UiComponents from '../components/sections/UiComponents.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <Sidebar />
+  <main class="main">
+    <div class="container"><Overview />
+    <SymbolCentral />
+    <SymbolSystems />
+    <SymbolIncorrect />
+    <Logotype />
+    <Typography />
+    <LogoSystems />
+    <ColorStyle />
+    <ColorCombinations />
+    <Examples />
+    <DesignTokens />
+    <UiComponents />
+    <footer class="footer">
+      <img src="/assets/svg/logotype-microspace-tm.svg" alt="kumo.productions™" class="invert-on-dark" />
+      <span class="footer-note">Branding Standards v1.0 — December 24th, 2024</span>
+    </footer>
+    </div>
+  </main>
+</Layout>

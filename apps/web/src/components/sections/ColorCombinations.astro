@@ -1,0 +1,58 @@
+---
+import Figure from '../Figure.astro';
+import SectionHeader from '../SectionHeader.astro';
+---
+
+<section id="combos" class="section">
+  <SectionHeader kicker="Color Style guideline" page="09" title="Color Combinations" sub="配色">
+    <p>これらは kumo.productions™ におけるカラーシステムにおいて、組み合わせの例を記載したものです。</p>
+  </SectionHeader>
+  <div class="fig-grid cols-2" style="--plate-h: 330px;">
+    <Figure
+      src="/fig-svg/combos-ok-mono.svg"
+      alt="Approved monochrome combinations"
+      num="1."
+      ja="異なるベースカラーを中心とした基本の組み合わせです。特別な意図がない場合は基本これを使用してください。"
+    />
+    <Figure
+      src="/fig-svg/combos-ok-hl.svg"
+      alt="Approved highlight combinations"
+      num="2."
+      ja="ハイライトカラーを使用した特殊な組み合わせです。特段誘導し目立たせたい意図がある場合、これを使用してください。"
+    />
+  </div>
+  <p class="block-label">Incorrect uses / 禁止配色</p>
+  <div class="prose">
+    <p>
+      これらは kumo.productions™
+      におけるカラーシステム上において、意図せずアイデンティティを損なわないよう禁止・注意する事項です。下記に定める例の他、著しくブランディングアイデンティティを損なう処理を行うことを禁止します。
+    </p>
+  </div>
+  <div class="fig-grid cols-2" style="--plate-h: 190px;">
+    <Figure
+      src="/fig-svg/combos-ng-1.svg"
+      alt="Incorrect: low contrast tone on tone"
+      num="1."
+      ja="同じグループに属するカラー同士を組み合わせないでください。"
+    />
+    <Figure
+      src="/fig-svg/combos-ng-2.svg"
+      alt="Incorrect: on highlight backgrounds"
+      num="2."
+      ja="ハイライトカラーを下地に使用することを禁止します。"
+    />
+    <Figure
+      src="/fig-svg/combos-ng-3.svg"
+      alt="Incorrect: highlight colors on Cloudiness gray"
+      num="3."
+      mono="Cloudiness gray"
+      ja="Cloudiness gray を下地に使用した際、ハイライトと組み合わせないでください。"
+    />
+    <Figure
+      src="/fig-svg/combos-ng-4.svg"
+      alt="Incorrect: low contrast highlight pairings"
+      num="4."
+      ja="異なるグループであってもトーンが近い色同士での組み合わせの使用は意図しない印象を与える可能性に注意してください。"
+    />
+  </div>
+</section>

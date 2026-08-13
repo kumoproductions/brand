@@ -1,0 +1,26 @@
+---
+interface Props {
+  file: string;
+  alt: string;
+  label?: string;
+  imgWidth?: string;
+  plateH?: string;
+}
+
+const { file, alt, label, imgWidth, plateH } = Astro.props;
+const src = `/assets/svg/${file}`;
+const download = `kumo-${file}`;
+---
+
+<div class="asset-card">
+  <div class="fig-plate asset-plate" style={plateH ? `--plate-h: ${plateH}` : undefined}>
+    <img src={src} alt={alt} style={imgWidth ? `width: ${imgWidth}; max-width: 100%;` : undefined} loading="lazy" />
+  </div>
+  <div class="asset-foot">
+    {label && <span class="asset-label">{label}</span>}
+    <div class="asset-actions">
+      <button class="chip-btn" type="button" data-copy-src={src}><span class="copy-label">Copy SVG</span></button>
+      <a class="chip-btn" href={src} download={download}>SVG ↓</a>
+    </div>
+  </div>
+</div>

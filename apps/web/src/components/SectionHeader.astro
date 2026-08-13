@@ -1,0 +1,30 @@
+---
+interface Props {
+  kicker?: string;
+  page?: string;
+  title: string;
+  sub?: string;
+}
+
+const { kicker, page, title, sub } = Astro.props;
+// PP Object Sans renders ™ at cap height; split it out so CSS can shrink it.
+const titleParts = title.split('™');
+---
+
+<header class="s-head">
+  {kicker && <p class="kicker">{kicker}</p>}
+  <div class="s-title-row">
+    {page && <span class="page-badge">{page}</span>}
+    <h2 class="s-title">
+      {titleParts.map((part, i) => <>{part}{i < titleParts.length - 1 && <span class="tm">™</span>}</>)}
+    </h2>
+  </div>
+  {sub && <p class="s-sub">{sub}</p>}
+  {
+    Astro.slots.has('default') && (
+      <div class="prose s-lede">
+        <slot />
+      </div>
+    )
+  }
+</header>

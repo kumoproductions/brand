@@ -1,0 +1,48 @@
+---
+const nav = [
+  { id: 'overview', en: 'Overview', ja: '概要・基本情報' },
+  { id: 'sym-central', en: 'Symbol — CENTRAL', ja: 'シンボル基準形' },
+  { id: 'sym-systems', en: 'Symbol — Systems', ja: '構成システム' },
+  { id: 'sym-ng', en: 'Symbol — Incorrect Uses', ja: '使用禁止例' },
+  { id: 'logotype', en: 'Logotype', ja: 'ロゴタイプ 5形態' },
+  { id: 'typography', en: 'Typography', ja: 'タイポグラフィ' },
+  { id: 'logo-systems', en: 'Logo Systems', ja: 'ロゴシステム' },
+  { id: 'color', en: 'Color Style', ja: 'カラー' },
+  { id: 'combos', en: 'Color Combinations', ja: '配色・禁止配色' },
+  { id: 'examples', en: 'Examples', ja: '使用例' },
+  { id: 'ds-tokens', en: 'Design Tokens', ja: '拡張 — CSSトークン' },
+  { id: 'ds-components', en: 'UI Components', ja: '拡張 — 実動UIセット' },
+];
+---
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <a href="#overview" aria-label="トップへ">
+      <img src="/assets/svg/logotype-microspace-tm.svg" alt="kumo.productions™" class="invert-on-dark" />
+    </a>
+    <span class="brand-note">Branding Standards v1.0</span>
+  </div>
+  <nav class="side-nav" aria-label="目次">
+    {
+      nav.map((item, i) => (
+        <a class="nav-link" href={`#${item.id}`}>
+          <span class="nav-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="nav-en">{item.en}</span>
+          <span class="nav-ja">{item.ja}</span>
+        </a>
+      ))
+    }
+  </nav>
+  <div class="sidebar-foot">
+    <button id="theme-toggle" class="chip-btn theme-toggle" type="button" aria-pressed="false" title="テーマ切替">
+      Light
+    </button>
+    <div class="side-links">
+      <a class="side-link" href="https://github.com/kumoproductions/branding" target="_blank" rel="noreferrer">
+        GitHub — Assets ↗
+      </a>
+      <a class="side-link" href="https://kumo.productions" target="_blank" rel="noreferrer">kumo.productions ↗</a>
+    </div>
+    <span class="side-meta">Creation day — Dec 24th, 2024</span>
+  </div>
+</aside>

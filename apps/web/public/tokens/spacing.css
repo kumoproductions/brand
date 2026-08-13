@@ -1,0 +1,30 @@
+/* kumo.productions(TM) — spacing, radii, elevation, motion */
+:root {
+  --unit-a: 4px; /* symbol grid unit "a" — spacing derives from it */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;  /* default control radius — echoes particle corner R=2a */
+  --radius-lg: 10px;
+  --radius-full: 999px;
+
+  --control-h-sm: 32px;
+  --control-h-md: 40px;
+  --control-h-lg: 48px;
+
+  /* Flat brand: hairlines over shadows */
+  --shadow-card: 0 1px 2px rgba(30, 30, 30, 0.06);
+  --shadow-overlay: 0 12px 40px rgba(30, 30, 30, 0.18);
+
+  --dur: 150ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}

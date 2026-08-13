@@ -1,0 +1,30 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  num?: string;
+  mono?: string;
+  ja?: string;
+  span?: boolean;
+  plateH?: string;
+}
+
+const { src, alt, num, mono, ja, span = false, plateH } = Astro.props;
+---
+
+<figure class:list={['fig', { 'span-all': span }]} style={plateH ? `--plate-h: ${plateH}` : undefined}>
+  <div class="fig-plate"><img src={src} alt={alt} loading="lazy" /></div>
+  {
+    (num || mono || ja) && (
+      <figcaption class="fig-cap">
+        {(num || mono) && (
+          <span class="cap-mono">
+            {num && <span class="cap-num">{num} </span>}
+            {mono}
+          </span>
+        )}
+        {ja && <span class="cap-ja">{ja}</span>}
+      </figcaption>
+    )
+  }
+</figure>
