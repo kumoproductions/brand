@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "brand-kumo-productions",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+  },
+  "images": {
+    "binding": "IMAGES",
+  },
+  "routes": [{ "pattern": "brand.kumo.productions", "custom_domain": true }],
+  "observability": {
+    "enabled": true,
+  },
+}

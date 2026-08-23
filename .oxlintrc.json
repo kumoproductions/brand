@@ -13,6 +13,14 @@
   "rules": {
     "no-console": ["error", { "allow": ["warn", "error"] }]
   },
+  "overrides": [
+    {
+      "files": ["scripts/**"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ],
   "env": {
     "es2024": true,
     "browser": true,

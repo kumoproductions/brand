@@ -37,14 +37,26 @@
 
 ---
 
+## Development
+
+- dev サーバーはバックグラウンドモードで起動する: `astro dev --background`（管理: `astro dev stop` / `status` / `logs`）。portless 経由は `pnpm dev`（https://brand.kumo.localhost）。
+- Astro のドキュメント: https://docs.astro.build （ルーティング・コンポーネント・スタイリング・i18n 等は作業前に該当ガイドを確認する）。
+
 ## プロジェクト固有ルール（@kumoproductions/branding）
 
-- このリポジトリは kumo.productions™ のブランドアセット置き場 + ブランドポータル（brand.kumo.productions）。
-- `apps/web` が Astro 製ポータル。ガイドライン本文は `src/components/sections/*.astro`（原本 `design/kumo-brand-guideline.dc.html` のテキストを、クラスベースのレイアウトシステム — `src/styles/global.css` + SectionHeader/Figure/AssetCard — に再実装したもの）。本文・数値は原本と等価を維持し、勝手に文言を変更しない。ただしオーナー指示（2026-08-12）により、原本PDF由来の言及は削除済み: P.xx ページ参照、Corrections セクション、「Based on」表記、EXT.01/02 バッジ（すべてサイドバーと揃えたセクション番号 01–12 に統一）。等価チェック時はこれらを除外して判断する。
-- `apps/web/public/` 配下（assets/svg, fig-svg, components, tokens, styles.css）はデザインシステムの成果物。ロゴ・図版 SVG のパスデータは編集禁止（差し替えは claude.ai/design プロジェクト側で行い再インポートする）。
+- このリポジトリは kumo.productions™ のブランドアセット置き場 + ブランドポータル（brand.kumo.productions）。単一パッケージ構成: `src/`（Astro ポータル）、`content/`（配布アセットの正）、`worker/`（画像生成 Worker）、`public/`（サイト静的ファイル）、`scripts/`（ビルド時のアセット収集）、`design/`（デザインソース）。
+- ガイドライン本文は `src/components/sections/*.astro`（原本 `design/kumo-brand-guideline.dc.html` のテキストを、クラスベースのレイアウトシステム — `src/styles/global.css` + SectionHeader/Figure/AssetCard — に再実装したもの）。日本語本文が正で、原本と等価を維持し、勝手に文言を変更しない。ただしオーナー指示（2026-08-12）により、原本PDF由来の言及は削除済み: P.xx ページ参照、Corrections セクション、「Based on」表記、EXT.01/02 バッジ（すべてサイドバーと揃えた連番セクション番号に統一 — 2026-08-23 に「Naming & Notation」を 02 として追加し現在 01–13）。また 2026-08-24 のオーナー指示で、08 Logo Systems 末尾の「Text (v1.0)」note（図版 SVG 内の文言を転記しただけのブロック）を削除済み。等価チェック時はこれらを除外して判断する。
+- レイアウトはページ全体で **単一の 12 カラムグリッド**（2026-08-23、オーナー指示）。`body` がトラックを定義し、サイドバー = 列 1–3 / コンテンツ = 列 4–12。`.main` → `.container` → `.section` → 各ブロックはすべて `grid-template-columns: subgrid` で同じ線を受け継ぎ、**トラックを再定義しない**（別グリッドを作らない）。コンテンツ側のスパンは 9 列基準で書く（本文＝列 1–6、3 列並び＝span 3、2 列並びは `--pair-a` / `--pair-b` で列 1–4 / 6–9・中央列をチャネルとして空ける）。幅の制御は `max-width` ではなく列スパンで行う。サイドバーなしの `/assets` のみ `.main` が 12 列全部を取る。ブレークポイントは 1100px（シェル解除）/ 960px（6 列）/ 720px（2 列）で、列数の切替と `--pair-*` の再定義だけで畳む。
+- i18n: `/` = 日本語（正）、`/en/` = 英訳。各セクションコンポーネントが `lang` prop を受け、ja/en の文言辞書を同居させる。日本語本文を変更したら英訳も追従させる。
+- `public/` 配下（assets/svg, fig-svg, components, tokens, styles.css）はデザインシステムの成果物。ロゴ・図版 SVG のパスデータは編集禁止（差し替えは claude.ai/design プロジェクト側で行い再インポートする）。
 - UI コンポーネントデモ（public/components/**）は CDN React + babel-standalone による iframe 単体動作。ビルドに組み込まない。
 - デザイントークンの正は `public/tokens/*.css`。ダークモードは `<html data-theme="dark">` で切り替え、ロゴ画像は `.invert-on-dark` で反転する。
-- ルートの `banner/ favicon/ icon/ logotype/ sphere/ typestyle/` は配布用アセット（従来どおり）。`pnpm assets:build` でラスタライズ、`pnpm assets:deploy` で R2 同期。
+- **SVG が唯一の正（SSOT）**。`content/<family>/svg/` にベクタ原本を置き、ラスタはリポジトリに一切保存しない（2026-08-23 に PNG/WebP/JPG 220 ファイルと R2 同期を廃止）。ラスタは `worker/index.ts` が resvg-wasm + Images binding でオンデマンド生成し、エッジにキャッシュする。
+- 命名規則: 小文字 kebab-case で `<family>-<variant>[-tm]-<tone>`。variant はガイドラインの語彙に揃える（`primary` / `secondary` / `tertiary` / `abbreviation` / `microspace`。旧 `short` / `micro` は廃止）。`-tm` は ™ 付き、`-black` / `-white` は**見た目のトーン**を指す（`icon-black` は黒地＋白マーク、`icon-white` はその反転）。
+- 生成 URL: `/i/<stem>.<png|webp|avif|jpg>?w=&q=&bg=`。`w` はプリセット段（16〜4096）、`q` は 10 刻みにスナップして課金対象の変換数を有界に保つ。`bg` は `#` なし hex で全面背景を敷く（JPEG は alpha がないため既定で白）。
+- 直リンク: `/icon.svg` `/icon-white.svg` `/logotype.svg` `/logotype-white.svg` `/sphere.svg` `/banner.jpg` とファビコン一式は `scripts/collect-assets.mjs`（prebuild）が `content/` から `public/` 直下へコピー（gitignore 済み）。`/icon.png` `/icon-white.png` `/logotype.png` `/logotype-white.png` は Worker が 512px で生成する（クエリで上書き可）。`public/content/` へのミラーは prune 付きで、content/ の正確な反映を保つ。
+- `content/banner|favicon|typestyle/` はベクタ原本を持たないため実ファイルのまま配布する。
+- デプロイ: Cloudflare Workers（`wrangler.jsonc` — static assets + `ASSETS` / `IMAGES` binding、custom domain brand.kumo.productions）。`pnpm deploy`。静的ファイルが先に解決され、該当がないパスだけ Worker に落ちる。
 - ブランド規定: ハイライト色は Sky blue #64ADD4 / Night sky blue #1E4B6B のみ。Night sky blue を黒地に置かない。ロゴの変形・回転・アウトライン化・規定外配色は禁止。
-- Web フォントは実フォントを self-host（`public/fonts/` の PP Object Sans / Inter Variable — git/kumoproductions と同一構成、`public/fonts.css` で宣言）。見出し=PP Object Sans、本文EN=Inter、JA=M PLUS 1p、mono=IBM Plex Mono。PP Object Sans は ™ をキャップハイトで描くため、見出しでは `<span class="tm">™</span>` で縮小する。
-- アセットの実用機能: `data-copy`（テキストコピー）/ `data-copy-src`（URL 先の内容をコピー）属性 + Layout の委譲ハンドラで動く。ダウンロードは同一オリジンの `<a download>`。
+- Web フォントは実フォントを self-host（`public/fonts/` の PP Object Sans / Inter Variable — git/kumoproductions と同一構成、`public/fonts.css` で宣言）。見出し=Helvetica Now Display（Web 表示は Helvetica Neue 代替）、本文EN=Inter、JA=BIZ UDPGothic（2026-08-23 に M PLUS 1p から変更）、mono=IBM Plex Mono。PP Object Sans はロゴタイプ専用の書体で、見出し・本文には使用禁止。
+- アセットの実用機能: `data-copy`（テキストコピー）/ `data-copy-src`（URL 先の内容をコピー）属性 + Layout の委譲ハンドラで動く。ダウンロードは同一オリジンの `<a download>`。全図版はクリックで Lightbox（`<dialog id="lightbox">`）。

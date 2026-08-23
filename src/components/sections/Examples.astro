@@ -1,0 +1,92 @@
+---
+import Figure from '../Figure.astro';
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const t = en
+  ? {
+      sub: 'Applications (names and contact details are placeholders)',
+      onScreen: 'On-screen',
+      print: 'Print',
+      fullText: (name: string) => `${name} — full text (placeholder copy)`,
+    }
+  : {
+      sub: '使用例(氏名・連絡先等はダミー表記)',
+      onScreen: 'On-screen / 映像',
+      print: 'Print / 印刷物',
+      fullText: (name: string) => `${name} — 全文(ダミー表記)`,
+    };
+---
+
+<section id="examples" class="section">
+  <SectionHeader kicker="Usage Examples" page="11" title="Usage Examples" sub={t.sub} />
+  <p class="block-label" style="margin-top: 40px;">{t.onScreen}</p>
+  <div class="fig-grid cols-3" style="--plate-h: 210px;">
+    <Figure src="/fig-svg/ex-onscreen-169.svg" alt="16:9 end card" mono="16:9" />
+    <Figure src="/fig-svg/ex-onscreen-scope.svg" alt="Cinemascope end card" mono="CINEMASCOPE" />
+    <Figure src="/fig-svg/ex-onscreen-spheres.svg" alt="SPHERES circular icon" mono="SPHERES — icon" />
+  </div>
+  <p class="block-label">{t.print}</p>
+  <div class="fig-grid cols-2">
+    <figure class="fig">
+      <div class="fig-plate" style="--plate-h: 460px;">
+        <img src="/fig-svg/ex-billing.svg" alt="Billing statement example" loading="lazy" />
+      </div>
+      <figcaption class="fig-cap"><span class="cap-title">Billing Statement</span></figcaption>
+    </figure>
+    <figure class="fig">
+      <div class="fig-plate" style="--plate-h: 460px;">
+        <img src="/fig-svg/ex-resume.svg" alt="Resume example" loading="lazy" />
+      </div>
+      <figcaption class="fig-cap"><span class="cap-title">Resume</span></figcaption>
+    </figure>
+    <figure class="fig">
+      <div class="fig-plate" style="--plate-h: 620px;">
+        <img src="/fig-svg/ex-cards.svg" alt="Business cards example" loading="lazy" />
+      </div>
+      <figcaption class="fig-cap"><span class="cap-title">Business cards</span></figcaption>
+    </figure>
+    <figure class="fig">
+      <div class="fig-plate" style="--plate-h: 330px;">
+        <img src="/fig-svg/ex-airplane.svg" alt="Aircraft livery example" loading="lazy" />
+      </div>
+      <figcaption class="fig-cap"><span class="cap-title">Aircraft livery</span></figcaption>
+    </figure>
+  </div>
+  <div class="transcripts">
+    <details class="transcript">
+      <summary>{t.fullText('Billing Statement')}</summary>
+      <div class="transcript-body">
+        2025.01.01 / C24015<br />BILLING STATEMENT<br />Bill to. CLIENT — Payment due. 2024.01.01<br />000-0000 0-00-0
+        SAMPLE BLDG 000<br />000-0000 0-0-0 000 / 000-0000-0000<br />Invoice number T0000000000000<br />Subject. CG —
+        Total.(JPY) 99,790<br />Bank account number BANK (0000) (000) 0000000<br />発行元: 合同会社○○○○○○
+        東京都○○区○○ サンプルビル 000<br />宛先住所: 東京都○○区○○○ 0-00-0 SAMPLE BLDG 000<br />Task description
+        デザイン製作費 / Delivery date 25.01.01 / Quantity 1 / Amount(JPY) 100,000(×6行)<br />Subject. CG デザイン制作費
+        / 銀行 ○○支店 普通 0000000(口座名義はダミー)<br />Subtotal 100,000 / Consumption tax 10% 10,000 / Total
+        99,790<br />kumo.productions / 01/01
+      </div>
+    </details>
+    <details class="transcript">
+      <summary>{t.fullText('Resume')}</summary>
+      <div class="transcript-body">
+        Areas of Expertise<br />Direction(×3)<br />Works Title Name Title(×8)<br />From corporate promotional videos to
+        virtual content.(×8)<br />Full Name | Alias<br />Executive Director, Motion Designer, CG Generalist<br
+        />本文ダミーテキスト: 「ある日の暮方の事である。…」(芥川龍之介『羅生門』冒頭)<br />kumo.productions / P.01
+      </div>
+    </details>
+    <details class="transcript">
+      <summary>{t.fullText('Business cards')}</summary>
+      <div class="transcript-body">
+        kumo.productions/ →<br />Full Name | Alias — Executive Director, Motion Designer, CG Generalist<br />Full Name
+        | Alias — Director, CG Artist<br />Full Name | Alias — Motion Designer, CG Artist<br />E
+        name@kumo.productions<br />P +81 000.0000.0000<br />X @username
+      </div>
+    </details>
+  </div>
+</section>

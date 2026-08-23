@@ -1,0 +1,35 @@
+/* kumo.productions(TM) — Typography Style (Branding Standards v1.0, P.09) */
+/* Latin faces lead every stack so mixed JA/EN text sets Latin glyphs in the
+   Latin face; the JA faces after them only take the glyphs Latin lacks.
+   Bare Helvetica/Arial are omitted on purpose: Windows aliases Helvetica to
+   Arial, which would shadow the self-hosted Inter fallback. PP Object Sans
+   is the logotype face only and must not appear in these stacks.
+   Web substitutes: Helvetica Now -> Helvetica Neue, TP Tokyo City ->
+   BIZ UDPGothic, Gravitica Mono -> IBM Plex Mono. */
+@import url("https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --font-display: "Helvetica Now Display", "Helvetica Neue", "Inter", "TP Tokyo City", "BIZ UDPGothic", sans-serif; /* EN Headline + JA synthetic */
+  --font-body: "Inter", "TP Tokyo City", "BIZ UDPGothic", sans-serif;                                              /* EN Body + JA synthetic */
+  --font-secondary: "Inter", "TP Tokyo City", "BIZ UDPGothic", sans-serif;                                         /* EN Secondary */
+  --font-ja: "Helvetica Now Text", "Helvetica Neue", "Inter", "TP Tokyo City", "BIZ UDPGothic", sans-serif;        /* JA Primary synthetic (TP Tokyo City + Helvetica Now Text) */
+  --font-mono: "Gravitica Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;                         /* Monospace */
+
+  --text-xs: 11px;
+  --text-sm: 12.5px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --text-2xl: 36px;
+  --text-3xl: 44px;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.6;
+  --leading-loose: 1.9;
+  --tracking-label: 0.12em; /* uppercase mono labels */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+}

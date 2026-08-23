@@ -1,0 +1,88 @@
+---
+import AssetCard from '../AssetCard.astro';
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const lede = en
+  ? [
+      'The logotype is the most fundamental element that visually represents kumo.productions™.',
+      'Built on Object Sans Regular by Pangram Pangram Foundry, it permeates and adapts to every context while embodying the identity at its most iconic.',
+      'Each of these logotypes is a fundamental element of the kumo.productions™ visual identity. Use the appropriate variant for the medium and the design of the graphic.',
+      'Never deform, rotate, or redraw the logotype in any circumstance. Changing the color or density of individual objects is also prohibited, apart from a few defined exceptions.',
+      'Always use an exact copy taken from this document or the accompanying logo data.',
+      'When multiple symbols are visible at once on a single surface of one medium, avoid layouts that repeat the same size and shape as a rule.',
+      'Three-dimensional objects are exempt from this rule.',
+    ]
+  : [
+      'このロゴタイプは kumo.productions™ を視覚的に象徴する最も基本的な要素です。',
+      'Pangram Pangram Foundry による Object Sans Regular をもとにタイプを構成した本要素は、あらゆる場面において浸透、適応するとともに、自身のアイデンティティを最も象徴的に体現します。',
+      'これらのロゴタイプは、何れも kumo.productions™ を視覚的に象徴する基本的な要素です。これらタイプシンボルは媒体やグラフィックの設計に従い、それぞれの要素を状況に応じ使用し分けてください。',
+      'このロゴタイプは如何なる場合においても変形、回転、その他描き直すことを禁止し、また、一部用件を除いた個別オブジェクトのカラー変更や濃度変更を禁止します。',
+      '必ず本書又は付属するロゴデータより完全に複製されたものを使用しなければなりません。',
+      'また、一つの媒体において、単一の面上にて複数のシンボルを同時に視認できる際、同じサイズ・形状のものを使用するレイアウトは基本的に避けてください。',
+      'ただし、立体物はこれに限らないものとします。',
+    ];
+
+// Per owner direction (2026-08-23): show only the TM variants.
+const variants = [
+  {
+    name: 'The kumo™ Logotype PRIMARY',
+    file: 'logotype-primary-tm.svg',
+    alt: 'kumo.productions™ logotype PRIMARY with TM',
+    width: '390px',
+  },
+  {
+    name: 'The kumo™ Logotype SECONDARY',
+    file: 'logotype-secondary-tm.svg',
+    alt: 'kumo.™ productions logotype SECONDARY with TM',
+    width: '360px',
+  },
+  {
+    name: 'The kumo™ Logotype TERTIARY',
+    file: 'logotype-tertiary-tm.svg',
+    alt: 'kumo. productions™ logotype TERTIARY with TM',
+    width: '219px',
+  },
+  {
+    name: 'The kumo™ Logotype ABBREVIATION',
+    file: 'logotype-abbreviation-tm.svg',
+    alt: 'kumo.™ logotype ABBREVIATION with TM',
+    width: '160px',
+  },
+  {
+    name: 'The kumo™ Logotype MICROSPACE',
+    file: 'logotype-microspace-tm.svg',
+    alt: 'kumo.productions™ logotype MICROSPACE with TM',
+    width: '139px',
+  },
+];
+---
+
+<section id="logotype" class="section">
+  <SectionHeader
+    kicker="The kumo.productions™ Logotype Guidelines"
+    page="06"
+    title="The kumo™ Logotype"
+    sub={en
+      ? 'Logotype — Pangram Pangram Foundry / Object Sans Regular'
+      : 'ロゴタイプ — Pangram Pangram Foundry / Object Sans Regular'}
+  >
+    {lede.map((paragraph) => <p class:list={{ en }}>{paragraph}</p>)}
+  </SectionHeader>
+  <div class="asset-rows">
+    {
+      variants.map((variant) => (
+        <div class="asset-row">
+          <h3 class="asset-name">{variant.name}</h3>
+          <AssetCard file={variant.file} alt={variant.alt} label={variant.file} imgWidth={variant.width} />
+        </div>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,70 @@
+---
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const nav = [
+  { id: 'overview', en: 'Overview', ja: '概要・基本情報', sub: 'Basics' },
+  { id: 'naming', en: 'Naming & Notation', ja: '正式な名称・表記', sub: 'Official name & notation' },
+  { id: 'sym-central', en: 'Symbol — CENTRAL', ja: 'シンボル基準形', sub: 'Base composition' },
+  { id: 'sym-systems', en: 'Symbol — Systems', ja: '構成システム', sub: 'Construction system' },
+  { id: 'sym-ng', en: 'Symbol — Incorrect Usage', ja: '使用禁止例', sub: 'Prohibited examples' },
+  { id: 'logotype', en: 'Logotype', ja: 'ロゴタイプ 5形態', sub: '5 variants' },
+  { id: 'typography', en: 'Typography', ja: 'タイポグラフィ', sub: 'Type system' },
+  { id: 'logo-systems', en: 'Logo Systems', ja: 'ロゴシステム', sub: 'Lockups' },
+  { id: 'color', en: 'Color Style', ja: 'カラー', sub: 'Palette' },
+  { id: 'combos', en: 'Color Combinations', ja: '配色・禁止配色', sub: 'Approved & prohibited' },
+  { id: 'examples', en: 'Usage Examples', ja: '使用例', sub: 'Applications' },
+  { id: 'ds-tokens', en: 'Design Tokens', ja: '拡張 — CSSトークン', sub: 'Extension — CSS tokens' },
+  { id: 'ds-components', en: 'UI Components', ja: '拡張 — 実動UIセット', sub: 'Extension — live UI set' },
+];
+---
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <a href="#overview" aria-label={en ? 'Back to top' : 'トップへ'}>
+      <img src="/assets/svg/logotype-microspace-tm.svg" alt="kumo.productions™" class="invert-on-dark" />
+    </a>
+    <span class="brand-note">Branding Standards v1.0</span>
+  </div>
+  <nav class="side-nav" aria-label={en ? 'Table of contents' : '目次'}>
+    {
+      nav.map((item, i) => (
+        <a class="nav-link" href={`#${item.id}`}>
+          <span class="nav-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="nav-en">{item.en}</span>
+          <span class="nav-ja">{en ? item.sub : item.ja}</span>
+        </a>
+      ))
+    }
+  </nav>
+  <div class="sidebar-foot">
+    <div class="side-controls">
+      <button
+        id="theme-toggle"
+        class="chip-btn theme-toggle"
+        type="button"
+        aria-pressed="false"
+        title={en ? 'Toggle theme' : 'テーマ切替'}
+      >
+        Light
+      </button>
+      <a class="chip-btn lang-switch" href={en ? '/' : '/en/'} aria-label={en ? '日本語版に切り替え' : 'Switch to English'}>
+        {en ? 'JA 日本語' : 'EN English'}
+      </a>
+    </div>
+    <div class="side-links">
+      <a class="side-link" href={en ? '/en/assets/' : '/assets/'}>
+        {en ? 'Brand Assets — Download →' : 'Brand Assets — 素材ダウンロード →'}
+      </a>
+      <a class="side-link" href="https://github.com/kumoproductions/branding" target="_blank" rel="noreferrer">
+        GitHub — Assets ↗
+      </a>
+      <a class="side-link" href="https://kumo.productions" target="_blank" rel="noreferrer">kumo.productions ↗</a>
+    </div>
+    <span class="side-meta">Created — Dec 24, 2024</span>
+  </div>
+</aside>

@@ -1,0 +1,54 @@
+---
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const t = en
+  ? {
+      sub: 'Combining the logotype with text',
+      lede: [
+        'The logotype can be combined with text to bring names, departments, or systems into the identity. Pair Logotype TERTIARY or Logotype ABBREVIATION with Helvetica Now Display, following the examples below.',
+        'These are examples of combining the symbol with type. CENTRAL combined with PRIMARY is the most basic form, but feel free to recompose them to suit the design, purpose, and medium.',
+      ],
+      capTypeSystem: 'Logotype TERTIARY / Logotype ABBREVIATION / Helvetica Now Display (names are placeholders)',
+    }
+  : {
+      sub: 'ロゴシステム',
+      lede: [
+        'ロゴタイプと文章を組み合わせ、名前、部署やシステムなどをアイデンティティに含むことが可能です。Logotype TERTIARY または、Logotype ABBREVIATION に、Helvetica Now Display を以下の例を参考に組み合わせ配置してください。',
+        'これらはシンボルおよびタイプを組み合わせた一例を記載しています。CENTRAL 及び PRIMARY を組み合わせたものが最も基本的な形になりますが、意匠、使用用途や媒体に合わせ、自由に組み替えてください。',
+      ],
+      capTypeSystem: 'Logotype TERTIARY / Logotype ABBREVIATION / Helvetica Now Display(氏名はダミー表記)',
+    };
+---
+
+<section id="logo-systems" class="section">
+  <SectionHeader kicker="Logo Systems Guidelines" page="08" title="Logo Systems" sub={t.sub}>
+    {t.lede.map((paragraph) => <p class:list={{ en }}>{paragraph}</p>)}
+  </SectionHeader>
+  <div class="fig-grid cols-2" style="--plate-h: 620px;">
+    <figure class="fig">
+      <div class="fig-plate">
+        <img src="/fig-svg/logo-type-system.svg" alt="Logo and typography system" loading="lazy" />
+      </div>
+      <figcaption class="fig-cap">
+        <span class="cap-title">Logo &amp; typography system</span>
+        <span class="cap-mono-sub">{t.capTypeSystem}</span>
+      </figcaption>
+    </figure>
+    <figure class="fig">
+      <div class="fig-plate">
+        <img src="/fig-svg/logo-lockups.svg" alt="Logo symbol and type system lockups" loading="lazy" />
+      </div>
+      <figcaption class="fig-cap">
+        <span class="cap-title">Logo symbol &amp; type system</span>
+        <span class="cap-mono-sub">CENTRAL / PRIMARY</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>

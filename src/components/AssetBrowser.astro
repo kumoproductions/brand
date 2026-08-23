@@ -1,0 +1,127 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { formatSize, getAssetLibrary } from '../utils/assetLibrary';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const t = en
+  ? {
+      title: 'kumo.productions™ Brand Assets',
+      description:
+        'Browse and download the official kumo.productions™ brand assets — logotype, icon, spheres, banners, favicons, and type styles.',
+      back: '← Branding Standards',
+      heading: 'Brand Assets',
+      sub: 'Browse and download the distributable assets. Click a preview to enlarge. Usage is governed by the Branding Standards.',
+      copySvg: 'Copy SVG',
+      langSwitch: 'JA 日本語',
+      langHref: '/assets/',
+      home: '/en/',
+      categories: {
+        logotype: 'Logotype',
+        icon: 'Icon',
+        sphere: 'Spheres',
+        banner: 'Banners',
+        favicon: 'Favicons',
+        typestyle: 'Type styles',
+      } as Record<string, string>,
+    }
+  : {
+      title: 'kumo.productions™ Brand Assets',
+      description:
+        'kumo.productions™ の公式ブランド素材のブラウズとダウンロード — ロゴタイプ、アイコン、スフィア、バナー、ファビコン、タイプスタイル。',
+      back: '← Branding Standards',
+      heading: 'Brand Assets',
+      sub: '配布素材のブラウズとダウンロード。プレビューをクリックすると拡大します。使用にあたっては Branding Standards の規定に従ってください。',
+      copySvg: 'Copy SVG',
+      langSwitch: 'EN English',
+      langHref: '/en/assets/',
+      home: '/',
+      categories: {
+        logotype: 'Logotype / ロゴタイプ',
+        icon: 'Icon / アイコン',
+        sphere: 'Spheres / スフィア',
+        banner: 'Banners / バナー',
+        favicon: 'Favicons / ファビコン',
+        typestyle: 'Type styles / タイプスタイル',
+      } as Record<string, string>,
+    };
+
+const library = getAssetLibrary();
+---
+
+<Layout lang={lang} title={t.title} description={t.description}>
+  <main class="main">
+    <div class="container">
+      <div class="meta-bar">
+        <a href={t.home} class="ab-back">{t.back}</a>
+        <span class="ab-controls">
+          <button id="theme-toggle" class="chip-btn theme-toggle" type="button" aria-pressed="false">Light</button>
+          <a class="chip-btn lang-switch" href={t.langHref}>{t.langSwitch}</a>
+        </span>
+      </div>
+      <header class="s-head" style="margin-top: 56px;">
+        <h1 class="s-title">{t.heading}</h1>
+        <p class="s-sub">{t.sub}</p>
+      </header>
+      {
+        library.map((category) => (
+          <section class="section ab-section">
+            <p class="block-label">{t.categories[category.name] ?? category.name}</p>
+            <div class="ab-grid">
+              {category.groups.map((group) => (
+                <div class="ab-card">
+                  {group.preview ? (
+                    <div
+                      class:list={['fig-plate', { 'ab-plate-dark': group.dark }]}
+                      style="--plate-h: 150px;"
+                    >
+                      <img src={group.preview} alt={group.base} loading="lazy" />
+                    </div>
+                  ) : (
+                    <div class="fig-plate ab-noprev" style="--plate-h: 150px;">
+                      <span class="ab-ext-badge">{group.variants[0]?.ext.toUpperCase()}</span>
+                    </div>
+                  )}
+                  <div class="ab-name">{group.base}</div>
+                  <div class="ab-chips">
+                    {group.variants.map((variant) => (
+                      <a
+                        class="chip-btn ab-chip"
+                        href={variant.url}
+                        download
+                        title={
+                          variant.size === undefined
+                            ? `${group.base} — ${variant.label}`
+                            : `${group.base} — ${variant.label} (${formatSize(variant.size)})`
+                        }
+                      >
+                        {variant.label} ↓
+                        {variant.size !== undefined && (
+                          <span class="ab-size">{formatSize(variant.size)}</span>
+                        )}
+                      </a>
+                    ))}
+                    {group.svg && (
+                      <button class="chip-btn" type="button" data-copy-src={group.svg}>
+                        <span class="copy-label">{t.copySvg}</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+      <footer class="footer">
+        <img src="/assets/svg/logotype-microspace-tm.svg" alt="kumo.productions™" class="invert-on-dark" />
+        <span class="footer-note">Branding Standards v1.0 — December 24, 2024</span>
+      </footer>
+    </div>
+  </main>
+</Layout>

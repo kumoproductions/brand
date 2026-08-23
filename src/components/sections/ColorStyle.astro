@@ -1,0 +1,154 @@
+---
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const t = en
+  ? {
+      sub: 'Color palette',
+      lede: [
+        'These colors are elements that establish the kumo.productions™ identity.',
+        'To match the symbol — a cloud and its gathering of water droplets — each is a special color drawn from the image of the sky.',
+        'Never alter their lightness, saturation, or hue, and always apply them as flat, uniform fills. Follow the pairing rules described later.',
+      ],
+      semanticLabel: 'Semantic colors — Extension',
+      semanticProse:
+        'Role-based aliases for the seven base colors. UI and production work should reference these as a rule (defined in tokens/colors.css). The usage rules for the two highlight colors — never on gray, never in low contrast — apply at the semantic layer as well.',
+      copyTitle: (hex: string) => `Copy ${hex}`,
+      grayNote: '#E9EAEB / #C9CCCE (derived from gray)',
+      extraNote: (value: string) => `${value} — additional color`,
+      uses: {
+        surfacePage: 'Page and card background',
+        surfaceSunken: 'Sunken surfaces, hover background',
+        surfaceInverse: 'Dark surfaces, inverse cards',
+        textPrimary: 'Body text and headings',
+        textSecondary: 'Secondary text, labels, captions',
+        textInverse: 'Text on inverse and accent surfaces',
+        accent: 'Links, emphasized actions',
+        accentSoft: 'Hover and focus emphasis',
+        accentSoftBg: 'Selection and highlight background',
+        border: 'Hairline dividers / input and outline borders',
+        focusRing: 'Focus ring (2px)',
+        scrim: 'Modal and overlay scrim',
+        danger: 'Errors, destructive actions (off-brand, minimal use)',
+        success: 'Success states (off-brand, minimal use)',
+        warning: 'Warnings (off-brand, minimal use)',
+      },
+    }
+  : {
+      sub: 'カラー',
+      lede: [
+        'これらのカラーは kumo.productions™ におけるアイデンティティを確立するための要素です。',
+        '雲やその水滴の集まりを模したシンボルに合わせ、それぞれ空をイメージした特別なカラーで構成されています。',
+        'これらはそれぞれの明度・彩度・色相を変えてはならず、均一に塗られている必要があります。また、後述する組み合わせの規定に従い、配色してください。',
+      ],
+      semanticLabel: 'Semantic colors — Extension / セマンティックカラー(拡張定義)',
+      semanticProse:
+        'ベース7色に役割を与えたエイリアス。UI・制作物では原則こちらを参照します(定義: tokens/colors.css)。ハイライト2色の運用ルール(グレー上禁止・低コントラスト禁止)はセマンティック層でも同様です。',
+      copyTitle: (hex: string) => `${hex} をコピー`,
+      grayNote: '#E9EAEB / #C9CCCE(gray由来)',
+      extraNote: (value: string) => `${value} — 追加色`,
+      uses: {
+        surfacePage: '画面・カードの地',
+        surfaceSunken: '沈み面・ホバー背景',
+        surfaceInverse: 'ダーク面・反転カード',
+        textPrimary: '本文・見出し',
+        textSecondary: '補足・ラベル・キャプション',
+        textInverse: '反転面・アクセント上の文字',
+        accent: 'リンク・強調アクション',
+        accentSoft: 'ホバー・フォーカスの強調',
+        accentSoftBg: '選択・ハイライト背景',
+        border: 'ヘアライン区切り / 入力・アウトライン枠',
+        focusRing: 'フォーカスリング(2px)',
+        scrim: 'モーダル・オーバーレイ背景',
+        danger: 'エラー・破壊的操作(ブランド外・最小使用)',
+        success: '完了・成功状態(ブランド外・最小使用)',
+        warning: '注意・要確認状態(ブランド外・最小使用)',
+      },
+    };
+
+const palette = [
+  { group: 'Base color (White)', name: 'Base white', rgb: 'R255 G255 B255', hex: '#FFFFFF', cmyk: 'C00 M00 Y00 K00', outline: true },
+  { group: 'Base color (White)', name: 'Cloud white', rgb: 'R247 G247 B247', hex: '#F7F7F7', cmyk: 'C05 M05 Y05 K05', outline: true },
+  { group: 'Base color (Gray)', name: 'Cloudiness gray', rgb: 'R106 G110 B113', hex: '#6A6E71', cmyk: 'C65 M55 Y50 K05', outline: false },
+  { group: 'Base color (Black)', name: 'Space black', rgb: 'R30 G30 B30', hex: '#1E1E1E', cmyk: 'C85 M80 Y80 K60', outline: false },
+  { group: 'Base color (Black)', name: 'Base black', rgb: 'R0 G0 B0', hex: '#000000', cmyk: 'C20 M20 Y20 K100', outline: false },
+  { group: 'Highlight color', name: 'Sky blue', rgb: 'R100 G173 B212', hex: '#64ADD4', cmyk: 'C60 M20 Y10 K00', outline: false },
+  { group: 'Highlight color', name: 'Night sky blue', rgb: 'R30 G75 B107', hex: '#1E4B6B', cmyk: 'C90 M70 Y45 K10', outline: false },
+];
+
+const tokens = [
+  { chip: 'background: #FFFFFF; border: 1px solid #E9EAEB;', name: '--surface-page / --surface-card', src: 'Base white #FFFFFF', use: t.uses.surfacePage },
+  { chip: 'background: #F7F7F7; border: 1px solid #E9EAEB;', name: '--surface-sunken', src: 'Cloud white #F7F7F7', use: t.uses.surfaceSunken },
+  { chip: 'background: #1E1E1E;', name: '--surface-inverse', src: 'Space black #1E1E1E', use: t.uses.surfaceInverse },
+  { chip: 'background: #000000;', name: '--text-primary', src: 'Base black #000000', use: t.uses.textPrimary },
+  { chip: 'background: #6A6E71;', name: '--text-secondary', src: 'Cloudiness gray #6A6E71', use: t.uses.textSecondary },
+  { chip: 'background: #FFFFFF; border: 1px solid #E9EAEB;', name: '--text-inverse / --text-on-accent', src: 'Base white #FFFFFF', use: t.uses.textInverse },
+  { chip: 'background: #1E4B6B;', name: '--accent', src: 'Night sky blue #1E4B6B', use: t.uses.accent },
+  { chip: 'background: #64ADD4;', name: '--accent-soft', src: 'Sky blue #64ADD4', use: t.uses.accentSoft },
+  { chip: 'background: rgba(100, 173, 212, 0.14); border: 1px solid #E9EAEB;', name: '--accent-soft-bg', src: 'Sky blue 14%', use: t.uses.accentSoftBg },
+  { chip: 'background: #FFFFFF; border: 1px solid #C9CCCE;', name: '--border-default / --border-strong', src: t.grayNote, use: t.uses.border },
+  { chip: 'background: #FFFFFF; box-shadow: 0 0 0 2px rgba(100, 173, 212, 0.55);', name: '--focus-ring', src: 'Sky blue 55%', use: t.uses.focusRing },
+  { chip: 'background: rgba(30, 30, 30, 0.5);', name: '--scrim', src: 'Space black 50%', use: t.uses.scrim },
+  { chip: 'background: oklch(0.5 0.13 25);', name: '--danger / --danger-bg', src: t.extraNote('oklch(0.5 0.13 25)'), use: t.uses.danger },
+  { chip: 'background: oklch(0.55 0.1 155);', name: '--success / --success-bg', src: t.extraNote('oklch(0.55 0.1 155)'), use: t.uses.success },
+  { chip: 'background: oklch(0.58 0.12 80);', name: '--warning / --warning-bg', src: t.extraNote('oklch(0.58 0.12 80)'), use: t.uses.warning },
+];
+---
+
+<section id="color" class="section">
+  <SectionHeader kicker="Color Style Guidelines" page="09" title="Color Style" sub={t.sub}>
+    {t.lede.map((paragraph) => <p class:list={{ en }}>{paragraph}</p>)}
+  </SectionHeader>
+  <div class="swatch-grid">
+    {
+      palette.map((color) => (
+        <button class="swatch" type="button" data-copy={color.hex} title={t.copyTitle(color.hex)}>
+          <span class:list={['swatch-chip', { 'chip-outline': color.outline }]} style={`background: ${color.hex};`} />
+          <span>
+            <span class="swatch-group">{color.group}</span>
+            <span class="swatch-name" style="display: block;">
+              {color.name}
+            </span>
+            <span class="swatch-codes" style="display: block;">
+              {color.rgb}
+              <br />
+              {color.hex}
+              <br />
+              {color.cmyk}
+            </span>
+          </span>
+          <span class="swatch-copy">Copy HEX</span>
+        </button>
+      ))
+    }
+  </div>
+  <p class="block-label">{t.semanticLabel}</p>
+  <div class="prose">
+    <p class:list={{ en }}>{t.semanticProse}</p>
+  </div>
+  <div class="tok-table">
+    <div class="tok-head"><span></span><span>Token</span><span>Source</span><span>Usage</span></div>
+    {
+      tokens.map((token) => (
+        <div class="tok-row">
+          <span class="tok-chip" style={token.chip} />
+          <span class="tok-name">{token.name}</span>
+          <span class="tok-src">{token.src}</span>
+          <span class="tok-use">{token.use}</span>
+        </div>
+      ))
+    }
+  </div>
+  <div class="asset-actions" style="margin-top: 24px;">
+    <button class="chip-btn" type="button" data-copy-src="/tokens/colors.css">
+      <span class="copy-label">Copy tokens/colors.css</span>
+    </button>
+    <a class="chip-btn" href="/tokens/colors.css" download="kumo-colors.css">colors.css ↓</a>
+  </div>
+</section>

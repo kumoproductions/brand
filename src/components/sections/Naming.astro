@@ -1,0 +1,211 @@
+---
+// Canonical source: git/docs/content/guide/branding-name/index.md
+// (docs.kumo.productions — 正式な名称・表記). Keep this section equivalent.
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const code = (text: string) => `<span class="hl">${text}</span>`;
+const LINK = '<a href="https://kumo.productions" target="_blank" rel="noreferrer">kumo.productions</a>';
+
+const t = en
+  ? {
+      sub: 'Official name and notation',
+      legal: `The legal name of the organization is ${code('合同会社クモ・プロダクションズ')} (English notation: ${code('kumo.productions, Inc.')}).`,
+      primaryLabel: 'Primary',
+      primary: `The official name and notation of kumo.productions™ is ${code('kumo.productions™')}. As a rule, do <strong>not</strong> put a space between ${code('productions')} and ${code('™')}; however, when a space makes the text resolve as a hyperlink and that benefit matters, the space may be inserted.`,
+      snsLabel: 'Example: posting on social media',
+      snsLines: ['kumo.productions™ → does not become a link', `${LINK} ™ → becomes a link`],
+      refUrl: 'See also → URL notation',
+      secondaryLabel: 'Secondary',
+      secondary: `In environments where ${code('™')} cannot be entered, write ${code('kumo.productions')}. Where ${code('.')} cannot be used either, write ${code('kumoproductions')}.`,
+      do1: [
+        { term: 'kumo.productions™', note: 'preferred' },
+        { term: 'kumo.productions', note: 'domain names and other environments without ™' },
+        { term: 'kumoproductions', note: 'usernames and other environments without ™ or the period' },
+      ],
+      dont1: [
+        { term: 'Kumo Productions', note: 'never capitalize' },
+        { term: 'kumo プロダクション', note: 'never render the name in Japanese' },
+        { term: 'kumo_productions', note: 'never use underscores' },
+      ],
+      shortLabel: 'Short name',
+      short1: `${code('kumo™')} may be used as the short name. Use it mainly within sentences, and avoid standalone use elsewhere as much as possible.`,
+      sentenceLabel: 'e.g. In sentences',
+      sentences: ['kumo™ is a video production company in Tokyo.', 'This work was produced by kumo™.'],
+      short2: `${code('kumo')} may also be added to file names and similar identifiers to indicate ownership or management by kumo™. Write it in all lowercase or all uppercase, unaffected by any surrounding naming convention.`,
+      do2: [
+        { term: 'kumo_Logo.png', note: 'file name' },
+        { term: 'KUMO-HND', note: 'host name' },
+      ],
+      dont2: [{ term: 'Kumo_Logo.png', note: 'never use PascalCase' }],
+      urlLabel: 'URL notation',
+      url1: `The domain name is <a href="https://kumo.productions" target="_blank" rel="noreferrer">${code('kumo.productions')}</a>. Unlike ${code('.com')} and the like, the ${code('.productions')} TLD is uncommon, and a bare domain is not obviously a URL at a glance — take care.`,
+      url2: 'Especially in print and other situations where a hyperlink is not possible, prefer writing the URL with an explicit marker, as follows.',
+      notations: [
+        { num: '1.', term: 'https://kumo.productions/', note: 'state https:// explicitly' },
+        { num: '2.', term: '🔗 kumo.productions', note: 'use an icon' },
+        { num: '3.', term: 'Web: kumo.productions', note: 'prefix with Web: or similar' },
+      ],
+    }
+  : {
+      sub: '正式な名称・表記',
+      legal: `法的な組織名は、${code('合同会社クモ・プロダクションズ')}(英語表記: ${code('kumo.productions, Inc.')})である。`,
+      primaryLabel: 'Primary / プライマリ',
+      primary: `kumo.productions™ の正式な名称・表記は ${code('kumo.productions™')} である。基本として ${code('productions')} と ${code('™')} の間にスペースは<strong>空けない</strong>が、スペースを空けることによってハイパーリンクとして成立し、そのメリットがある場合は空けても良い。`,
+      snsLabel: '例: ソーシャルメディアでの投稿',
+      snsLines: ['kumo.productions™ → リンクにならない', `${LINK} ™ → リンクになる`],
+      refUrl: '参考 → URLとしての表記',
+      secondaryLabel: 'Secondary / セカンダリ',
+      secondary: `${code('™')} が入力できない環境では、${code('kumo.productions')} と表記する。さらに、${code('.')} が入力できない環境では、${code('kumoproductions')} と表記する。`,
+      do1: [
+        { term: 'kumo.productions™', note: '優先して使用' },
+        { term: 'kumo.productions', note: 'ドメイン名など、™が入力できない環境' },
+        { term: 'kumoproductions', note: 'ユーザー名など、™と.が入力できない環境' },
+      ],
+      dont1: [
+        { term: 'Kumo Productions', note: '大文字は使用しない' },
+        { term: 'kumo プロダクション', note: '日本語では表記しない' },
+        { term: 'kumo_productions', note: '_(アンダースコア)は使用しない' },
+      ],
+      shortLabel: 'Short name / 短縮名称の使用',
+      short1: `${code('kumo™')} を短縮名称として使用することができる。主に文章中で使用し、それ以外での単体使用は極力避ける。`,
+      sentenceLabel: 'e.g. 文章中',
+      sentences: ['kumo™は、東京の映像制作会社です。', 'この作品はkumo™によって制作されました。'],
+      short2: `また、kumo™ による所有や管理を示すため、ファイル名などに ${code('kumo')} をつけることができる。すべて小文字表記、または全て大文字表記とし、他の命名規則の影響を受けない。`,
+      do2: [
+        { term: 'kumo_Logo.png', note: 'ファイル名' },
+        { term: 'KUMO-HND', note: 'ホスト名' },
+      ],
+      dont2: [{ term: 'Kumo_Logo.png', note: 'PascalCase は使用しない' }],
+      urlLabel: 'URL notation / URLとしての表記',
+      url1: `ドメイン名は <a href="https://kumo.productions" target="_blank" rel="noreferrer">${code('kumo.productions')}</a> である。${code('.com')} 等と違い ${code('.productions')} という TLD はマイナーで、それが一目で URL であると分かりづらいため注意する。`,
+      url2: '特に印刷物など、ハイパーリンクに出来ない状況で URL を記載する際は、以下のように URL を表す文字を使用することが望ましい。',
+      notations: [
+        { num: '1.', term: 'https://kumo.productions/', note: 'https:// を明示的に記載する' },
+        { num: '2.', term: '🔗 kumo.productions', note: 'アイコンを使用する' },
+        { num: '3.', term: 'Web: kumo.productions', note: '先頭に Web: などをつける' },
+      ],
+    };
+---
+
+<section id="naming" class="section">
+  <SectionHeader
+    kicker="The kumo.productions™ Naming Guidelines"
+    page="02"
+    title="Naming & Notation"
+    sub={t.sub}
+  />
+  <div class="note" style="margin-top: 36px;">
+    <span class="note-label">Info</span>
+    <div class="note-body" set:html={t.legal} />
+  </div>
+
+  <p class="block-label">{t.primaryLabel}</p>
+  <div class="prose">
+    <p class:list={{ en }} set:html={t.primary} />
+  </div>
+  <div class="note">
+    <span class="note-label">{t.snsLabel}</span>
+    <div class="note-mono">
+      {t.snsLines.map((line, i) => <>{i > 0 && <br />}<Fragment set:html={line} /></>)}
+    </div>
+    <a class="naming-ref" href="#naming-url">{t.refUrl}</a>
+  </div>
+
+  <p class="block-label">{t.secondaryLabel}</p>
+  <div class="prose">
+    <p class:list={{ en }} set:html={t.secondary} />
+  </div>
+  <div class="dodont">
+    <div class="dodont-col">
+      <p class="dodont-head">Do</p>
+      <ul class="dodont-list">
+        {
+          t.do1.map((item) => (
+            <li>
+              <span class="dd-term">{item.term}</span>
+              <span class="dd-note">{item.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="dodont-col is-dont">
+      <p class="dodont-head">Don't</p>
+      <ul class="dodont-list">
+        {
+          t.dont1.map((item) => (
+            <li>
+              <span class="dd-term">{item.term}</span>
+              <span class="dd-note">{item.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <p class="block-label">{t.shortLabel}</p>
+  <div class="prose">
+    <p class:list={{ en }} set:html={t.short1} />
+  </div>
+  <div class="note">
+    <span class="note-label">{t.sentenceLabel}</span>
+    <div class="note-body">
+      {t.sentences.map((sentence, i) => <>{i > 0 && <br />}{sentence}</>)}
+    </div>
+  </div>
+  <div class="prose" style="margin-top: 24px;">
+    <p class:list={{ en }} set:html={t.short2} />
+  </div>
+  <div class="dodont">
+    <div class="dodont-col">
+      <p class="dodont-head">Do</p>
+      <ul class="dodont-list">
+        {
+          t.do2.map((item) => (
+            <li>
+              <span class="dd-term">{item.term}</span>
+              <span class="dd-note">{item.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="dodont-col is-dont">
+      <p class="dodont-head">Don't</p>
+      <ul class="dodont-list">
+        {
+          t.dont2.map((item) => (
+            <li>
+              <span class="dd-term">{item.term}</span>
+              <span class="dd-note">{item.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <p class="block-label" id="naming-url">{t.urlLabel}</p>
+  <div class="prose">
+    <p class:list={{ en }} set:html={t.url1} />
+    <p class:list={{ en }}>{t.url2}</p>
+  </div>
+  <ol class="dodont-list notation-list">
+    {
+      t.notations.map((item) => (
+        <li>
+          <span class="dd-term"><span class="cap-num">{item.num} </span>{item.term}</span>
+          <span class="dd-note">{item.note}</span>
+        </li>
+      ))
+    }
+  </ol>
+</section>

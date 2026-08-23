@@ -1,0 +1,184 @@
+---
+import '../styles/global.css';
+import SphereOrnament from '../components/SphereOrnament.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+  title?: string;
+  description?: string;
+}
+
+const { lang = 'ja' } = Astro.props;
+const {
+  title = 'kumo.productions™ Branding Standards',
+  description = lang === 'en'
+    ? 'The official brand portal of kumo.productions™. Branding Standards v1.0 — symbol, logotype, typography, color, usage examples, and design tokens.'
+    : 'kumo.productions™ の公式ブランドポータル。Branding Standards v1.0 — シンボル、ロゴタイプ、タイポグラフィ、カラー、使用例、デザイントークン。',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="kumo.productions™" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta property="og:image" content={new URL('/og.jpg', Astro.site)} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'ja_JP'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="alternate" hreflang="ja" href={new URL('/', Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL('/en/', Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script is:inline>
+      // Set the theme before first paint to avoid a light-mode flash.
+      if (localStorage.getItem('kumo-theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    </script>
+  </head>
+  <body>
+    <SphereOrnament />
+    <slot />
+    <dialog id="lightbox" class="lightbox" aria-label="Figure viewer">
+      <button class="lightbox-close" type="button" aria-label="Close">✕</button>
+      <div class="lightbox-frame">
+        <img class="lightbox-img" alt="" />
+      </div>
+      <p class="lightbox-cap"></p>
+    </dialog>
+    <script>
+      // ------------------------------------------------------------- theme
+      const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+
+      // Component demo iframes without an explicit ?theme= follow the page
+      // theme via postMessage (see components/**/*.card.html).
+      function applyTheme(dark: boolean) {
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+        for (const frame of document.querySelectorAll('iframe')) {
+          frame.contentWindow?.postMessage({ kumoTheme: dark ? 'dark' : 'light' }, '*');
+        }
+        const button = document.getElementById('theme-toggle');
+        if (button) {
+          button.textContent = dark ? 'Dark' : 'Light';
+          button.setAttribute('aria-pressed', String(dark));
+        }
+      }
+
+      applyTheme(isDark());
+
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const next = !isDark();
+        localStorage.setItem('kumo-theme', next ? 'dark' : 'light');
+        applyTheme(next);
+      });
+
+      for (const frame of document.querySelectorAll('iframe')) {
+        frame.addEventListener('load', () => {
+          frame.contentWindow?.postMessage({ kumoTheme: isDark() ? 'dark' : 'light' }, '*');
+        });
+      }
+
+      // ------------------------------------------------------------- copy
+      function showCopied(el: Element, ok: boolean) {
+        const label = el.querySelector('.copy-label, .swatch-copy') ?? el;
+        const original = label.textContent;
+        label.textContent = ok ? 'Copied' : 'Failed';
+        el.setAttribute('data-copied', '');
+        setTimeout(() => {
+          label.textContent = original;
+          el.removeAttribute('data-copied');
+        }, 1400);
+      }
+
+      document.addEventListener('click', async (event) => {
+        const el = (event.target as HTMLElement).closest('[data-copy], [data-copy-src]');
+        if (!el) return;
+        try {
+          const src = el.getAttribute('data-copy-src');
+          const text = src ? await (await fetch(src)).text() : (el.getAttribute('data-copy') ?? '');
+          await navigator.clipboard.writeText(text);
+          showCopied(el, true);
+        } catch {
+          showCopied(el, false);
+        }
+      });
+
+      // --------------------------------------------------------- lightbox
+      const lightbox = document.getElementById('lightbox') as HTMLDialogElement;
+      const lightboxImg = lightbox.querySelector('.lightbox-img') as HTMLImageElement;
+      const lightboxCap = lightbox.querySelector('.lightbox-cap') as HTMLElement;
+
+      function openLightbox(img: HTMLImageElement) {
+        lightboxImg.src = img.currentSrc || img.src;
+        lightboxImg.alt = img.alt;
+        // White artwork comes from a dark plate — keep the frame dark too.
+        const dark = !!img.closest('.ab-plate-dark, .ornament-demo');
+        lightbox.querySelector('.lightbox-frame')?.classList.toggle('lightbox-frame-dark', dark);
+        const figcaption = img.closest('figure')?.querySelector('figcaption');
+        const parts = figcaption
+          ? [...figcaption.children].map((child) => child.textContent?.trim() ?? '').filter(Boolean)
+          : [];
+        lightboxCap.textContent = parts.join(' — ') || img.alt;
+        lightbox.showModal();
+      }
+
+      for (const plate of document.querySelectorAll<HTMLElement>('.fig-plate')) {
+        const img = plate.querySelector('img');
+        if (!img) continue;
+        plate.setAttribute('role', 'button');
+        plate.tabIndex = 0;
+        plate.addEventListener('click', () => openLightbox(img));
+        plate.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openLightbox(img);
+          }
+        });
+      }
+
+      // Any click inside the dialog (backdrop, frame, or image) closes it.
+      lightbox.addEventListener('click', () => lightbox.close());
+
+      // -------------------------------------------------------- scroll spy
+      const sections = [...document.querySelectorAll<HTMLElement>('main section[id]')];
+      const links = new Map(
+        [...document.querySelectorAll<HTMLAnchorElement>('.nav-link[href^="#"]')].map((link) => [
+          link.getAttribute('href')?.slice(1) ?? '',
+          link,
+        ])
+      );
+      const visible = new Set<string>();
+      const spy = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) visible.add(entry.target.id);
+            else visible.delete(entry.target.id);
+          }
+          const current = sections.find((section) => visible.has(section.id));
+          for (const [id, link] of links) link.classList.toggle('is-active', id === current?.id);
+        },
+        { rootMargin: '-10% 0px -70% 0px' }
+      );
+      for (const section of sections) spy.observe(section);
+    </script>
+  </body>
+</html>
