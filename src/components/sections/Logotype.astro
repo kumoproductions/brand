@@ -80,7 +80,13 @@ const variants = [
       variants.map((variant) => (
         <div class="asset-row">
           <h3 class="asset-name">{variant.name}</h3>
-          <AssetCard file={variant.file} alt={variant.alt} label={variant.file} imgWidth={variant.width} />
+          <AssetCard
+            file={variant.file}
+            alt={variant.alt}
+            label={variant.file}
+            imgWidth={variant.width}
+            stem={variant.file.replace(/\.svg$/, '-black')}
+          />
         </div>
       ))
     }

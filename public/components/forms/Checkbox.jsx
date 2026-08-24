@@ -12,10 +12,12 @@ export function Checkbox({ checked = false, onChange, label, disabled = false, n
           style={{ position: 'absolute', inset: 0, opacity: 0, margin: 0, cursor: 'inherit' }}
         />
         <span aria-hidden="true" style={{
+          // Square + transparent like the site's form fields; checked fills
+          // solid (the contact form's checked-segment inversion).
           width: 18, height: 18, boxSizing: 'border-box', display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          background: checked ? 'var(--solid)' : 'var(--surface-card)',
+          background: checked ? 'var(--solid)' : 'transparent',
           border: `1px solid ${checked ? 'var(--solid)' : 'var(--border-strong)'}`,
-          borderRadius: 'var(--radius-sm)',
+          borderRadius: 0,
           boxShadow: focus ? '0 0 0 2px var(--focus-ring)' : 'none',
           transition: 'background var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease)'
         }}>

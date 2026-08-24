@@ -1,0 +1,116 @@
+---
+// Raster export dialog: a UI over the worker's on-demand image API
+// (/i/<stem>.<ext>?w=&q=&bg=). Opened from any [data-export] chip with that
+// asset preselected; tone / ™ toggles cover the full distribution catalogue,
+// including variants the guideline body does not display. Logic lives in the
+// Layout script next to the lightbox.
+import { getExportBases } from '../utils/assetLibrary';
+
+// Mirrors worker/index.ts WIDTH_STEPS and quality snap points.
+const WIDTH_STEPS = [
+  16, 24, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024, 1536, 2048, 3072,
+  4096,
+];
+const QUALITY_STEPS = [100, 90, 80, 70, 60, 50];
+
+// Base palette only: highlight colors are prohibited as backgrounds.
+const BACKGROUNDS = [
+  { value: '', label: 'None (transparent)' },
+  { value: 'ffffff', label: '#FFFFFF Base white' },
+  { value: 'f7f7f7', label: '#F7F7F7 Cloud white' },
+  { value: '1e1e1e', label: '#1E1E1E Space black' },
+  { value: '000000', label: '#000000 Base black' },
+];
+
+const bases = getExportBases();
+---
+
+<dialog id="exporter" class="exporter" aria-label="Raster export">
+  <div class="exporter-panel">
+    <div class="exporter-head">
+      <span class="exporter-title">Raster export</span>
+      <button class="chip-btn exporter-close" type="button">Close ✕</button>
+    </div>
+    <div class="exporter-controls">
+      <label class="ex-field">
+        Asset
+        <select id="ex-asset">
+          {
+            bases.map((item) => (
+              <option
+                value={item.base}
+                data-family={item.family}
+                data-tm={item.tm}
+                data-tone={String(item.tone)}
+              >
+                {item.base}
+              </option>
+            ))
+          }
+        </select>
+      </label>
+      <label class="ex-field">
+        Tone
+        <select id="ex-tone">
+          <option value="black">black</option>
+          <option value="white">white</option>
+        </select>
+      </label>
+      <label class="ex-field ex-check">
+        ™ TM
+        <input type="checkbox" id="ex-tm" checked />
+      </label>
+      <label class="ex-field">
+        Format
+        <select id="ex-format">
+          <option value="png">png</option>
+          <option value="webp">webp</option>
+          <option value="avif">avif</option>
+          <option value="jpg">jpg</option>
+        </select>
+      </label>
+      <label class="ex-field">
+        Width
+        <select id="ex-width">
+          <option value="">natural</option>
+          {
+            WIDTH_STEPS.map((width) => (
+              <option value={String(width)} selected={width === 512}>
+                {width}
+              </option>
+            ))
+          }
+        </select>
+      </label>
+      <label class="ex-field">
+        Quality
+        <select id="ex-quality">
+          <option value="">auto</option>
+          {QUALITY_STEPS.map((quality) => <option value={String(quality)}>{quality}</option>)}
+        </select>
+      </label>
+      <label class="ex-field">
+        Background
+        <select id="ex-bg">
+          {BACKGROUNDS.map((bg) => <option value={bg.value}>{bg.label}</option>)}
+        </select>
+      </label>
+    </div>
+    <div class="exporter-preview">
+      <img id="ex-img" alt="Export preview" />
+    </div>
+    <div class="exporter-out">
+      <code class="exporter-url" id="ex-url"></code>
+      <div class="exporter-actions">
+        <a class="chip-btn" id="ex-download" href="#" download>Download ↓</a>
+        <button class="chip-btn" type="button" id="ex-copy-url" data-copy="">
+          <span class="copy-label">Copy URL</span>
+        </button>
+        <a class="chip-btn" id="ex-svg" href="#" download>SVG ↓</a>
+        <button class="chip-btn" type="button" id="ex-copy-svg" data-copy-src="">
+          <span class="copy-label">Copy SVG</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>

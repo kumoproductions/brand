@@ -12,13 +12,15 @@ export function Switch({ checked = false, onChange, label, disabled = false, nam
           style={{ position: 'absolute', inset: 0, opacity: 0, margin: 0, cursor: 'inherit' }}
         />
         <span aria-hidden="true" style={{
+          // Off state is an outline track like the site's transparent fields.
           width: 36, height: 20, boxSizing: 'border-box', borderRadius: 'var(--radius-full)', padding: 2,
-          background: checked ? 'var(--solid)' : 'var(--border-strong)',
+          background: checked ? 'var(--solid)' : 'transparent',
+          border: `1px solid ${checked ? 'var(--solid)' : 'var(--border-strong)'}`,
           boxShadow: focus ? '0 0 0 2px var(--focus-ring)' : 'none',
-          display: 'inline-flex',
-          transition: 'background var(--dur) var(--ease), box-shadow var(--dur) var(--ease)'
+          display: 'inline-flex', alignItems: 'center',
+          transition: 'background var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease)'
         }}>
-          <span style={{ width: 16, height: 16, borderRadius: 'var(--radius-full)', background: 'var(--on-solid)', transform: checked ? 'translateX(16px)' : 'translateX(0)', transition: 'transform var(--dur) var(--ease)' }}></span>
+          <span style={{ width: 14, height: 14, borderRadius: 'var(--radius-full)', background: checked ? 'var(--on-solid)' : 'var(--border-strong)', transform: checked ? 'translateX(16px)' : 'translateX(0)', transition: 'transform var(--dur) var(--ease), background var(--dur) var(--ease)' }}></span>
         </span>
       </span>
       {label && <span>{label}</span>}

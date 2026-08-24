@@ -21,7 +21,7 @@ export function Tooltip({ content, side = 'top', children }) {
         <span role="tooltip" style={{
           position: 'absolute', ...pos, zIndex: 1100,
           background: 'var(--solid)', color: 'var(--on-solid)',
-          padding: '5px 8px', borderRadius: 'var(--radius-sm)',
+          padding: '5px 8px',
           fontFamily: 'var(--font-body)', fontSize: 'var(--text-xs)', lineHeight: 1.4,
           whiteSpace: 'nowrap', pointerEvents: 'none'
         }}>{content}</span>

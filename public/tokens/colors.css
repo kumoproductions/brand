@@ -39,26 +39,34 @@
   --solid-hover: var(--kumo-space-black);
   --on-solid: var(--kumo-base-white);
   --accent-hover: #16405C;
+
+  /* Amount to invert a black-drawn asset placed on --surface-inverse
+     (1 = white logo on the dark plate; 0 in dark mode, whose inverse
+     surface is white). */
+  --invert-on-inverse: 1;
 }
 
-/* Dark mode — opt in with <html data-theme="dark"> */
+/* Dark mode — opt in with <html data-theme="dark">.
+   Follows the current kumo.productions site: Base black ground, Cloud white
+   text, panels on Space black, wells on its 50% tint, Cloudiness-gray
+   hairlines. */
 [data-theme="dark"] {
-  --surface-page: var(--kumo-space-black);
+  --surface-page: var(--kumo-base-black);
   --surface-card: var(--kumo-space-black);
-  --surface-sunken: var(--kumo-base-black);
+  --surface-sunken: #0F0F0F; /* Space black 50% over black — the site's content tint */
   --surface-inverse: var(--kumo-base-white);
-  --text-primary: var(--kumo-base-white);
-  --text-secondary: #9BA0A3; /* Cloudiness gray lightened for dark */
+  --text-primary: var(--kumo-cloud-white);
+  --text-secondary: #9BA0A3; /* Cloudiness gray lightened — #6A6E71 as-is fails AA on black */
   --text-inverse: var(--kumo-base-black);
   --text-on-accent: var(--kumo-space-black);
   --accent: var(--kumo-sky-blue); /* Night sky blue lacks contrast on black (NG combo) */
   --accent-soft: var(--kumo-sky-blue);
   --accent-soft-bg: rgba(100, 173, 212, 0.16);
   --accent-hover: #8EC6E2;
-  --border-default: rgba(255, 255, 255, 0.12);
-  --border-strong: rgba(255, 255, 255, 0.3);
+  --border-default: rgba(106, 110, 113, 0.4); /* Cloudiness gray 40% */
+  --border-strong: var(--kumo-cloudiness-gray);
   --focus-ring: rgba(100, 173, 212, 0.55);
-  --scrim: rgba(0, 0, 0, 0.6);
+  --scrim: rgba(0, 0, 0, 0.75);
   --danger: oklch(0.72 0.12 25);
   --danger-bg: oklch(0.3 0.06 25);
   --success: oklch(0.75 0.09 155);
@@ -68,4 +76,5 @@
   --solid: var(--kumo-base-white);
   --solid-hover: var(--kumo-cloud-white);
   --on-solid: var(--kumo-base-black);
+  --invert-on-inverse: 0;
 }

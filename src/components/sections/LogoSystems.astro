@@ -1,4 +1,5 @@
 ---
+import AssetCard from '../AssetCard.astro';
 import SectionHeader from '../SectionHeader.astro';
 
 interface Props {
@@ -50,5 +51,15 @@ const t = en
         <span class="cap-mono-sub">CENTRAL / PRIMARY</span>
       </figcaption>
     </figure>
+  </div>
+  <p class="block-label">{en ? 'Logo system assets' : 'Logo system assets / ロゴシステム素材'}</p>
+  <div class="asset-grid">
+    <AssetCard
+      file="logosystem-tm-black.svg"
+      src="/content/logotype/svg/logosystem-tm-black.svg"
+      alt="kumo.productions™ logo system lockup — CENTRAL / PRIMARY"
+      label="logosystem-tm-black.svg"
+      stem="logosystem-tm-black"
+    />
   </div>
 </section>

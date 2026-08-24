@@ -1,5 +1,6 @@
 ---
 import SectionHeader from '../SectionHeader.astro';
+import { formatSize, getStaticFiles } from '../../utils/assetLibrary';
 
 interface Props {
   lang?: 'ja' | 'en';
@@ -118,5 +119,15 @@ const enSpecimen = 'abcdefghijklmnopqrstuvwxyz|ABCDEFGHIJKLMNOPQRSTUVWXYZ|012345
       100%(PRIMARY・SECONDARY)<br />kumo.productions.type-style2 — 100%(SECONDARY)<br />kumo.yakumono-typestyle —
       PRIMARY・SECONDARY(約物)
     </div>
+  </div>
+  <p class="block-label">{en ? 'Type style files' : 'Type style files / 合成フォント・文字組アキ量設定'}</p>
+  <div class="file-list">
+    {
+      getStaticFiles('typestyle').map((file) => (
+        <a class="chip-btn" href={file.url} download={file.name}>
+          {file.name} ↓ <span class="chip-size">{formatSize(file.size)}</span>
+        </a>
+      ))
+    }
   </div>
 </section>

@@ -203,10 +203,6 @@ figure {
 }
 
 /* The asset browser has no sidebar, so its content takes all twelve. */
-body:not(:has(> .sidebar)) .main {
-  grid-column: 1 / -1;
-}
-
 .container {
   grid-column: 1 / -1;
   display: grid;
@@ -266,7 +262,6 @@ body:not(:has(> .sidebar)) .main {
    Width comes from the grid alone — no element carries a max-width. */
 .section > .prose,
 .s-head > .s-lede,
-.s-head > .s-sub,
 .section > .rules,
 .section > .note,
 .section > .notation-list {
@@ -306,7 +301,6 @@ body:not(:has(> .sidebar)) .main {
   color: var(--text-primary);
   background: transparent;
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-sm);
   padding: 6px 11px;
   cursor: pointer;
   transition:
@@ -354,10 +348,13 @@ body:not(:has(> .sidebar)) .main {
   margin-bottom: 14px;
 }
 
+/* One baseline lockup: badge + EN title + JA sub. The sub sits on the
+   title's baseline instead of hanging on its own line below. */
 .s-title-row {
   display: flex;
   align-items: baseline;
-  gap: 14px;
+  flex-wrap: wrap;
+  gap: 4px 14px;
 }
 
 .page-badge {
@@ -382,7 +379,6 @@ body:not(:has(> .sidebar)) .main {
   font-family: var(--font-ja);
   font-size: 13px;
   color: var(--text-secondary);
-  margin-top: 10px;
 }
 
 .s-lede {
@@ -516,83 +512,36 @@ body:not(:has(> .sidebar)) .main {
   fill: currentColor;
 }
 
-/* ----------------------------------------------------------- asset browser */
+/* --------------------------------------------------- embedded asset blocks */
 
-.ab-plate-dark {
+/* Plate for artwork drawn entirely in white (white-tone previews). */
+.plate-dark {
   background: #1e1e1e;
 }
 
-.ab-back {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  text-decoration: none;
-}
-
-.ab-back:hover {
-  color: var(--accent);
-}
-
-.ab-controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.ab-section {
-  margin-top: 80px;
-}
-
-.ab-grid {
+/* Three-up download cards inside a section. */
+.asset-grid {
   display: grid;
   grid-template-columns: subgrid;
-  row-gap: 36px;
-  margin-top: 28px;
+  row-gap: 32px;
+  margin-top: 24px;
 }
 
-/* Three-up — this page runs on all twelve columns, not the content nine. */
-.ab-grid > .ab-card {
-  grid-column: span 4;
+.asset-grid > .asset-card {
+  grid-column: span 3;
 }
 
-.ab-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-}
-
-.ab-name {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  word-break: break-all;
-}
-
-.ab-chips {
+/* Flat chip row for files distributed as-is (favicons, type styles). */
+.file-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 20px;
 }
 
-.ab-size {
+.chip-size {
   color: var(--text-secondary);
-  margin-left: 6px;
   font-size: 9px;
-}
-
-.ab-noprev {
-  cursor: default;
-}
-
-.ab-ext-badge {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-strong);
-  padding: 6px 10px;
 }
 
 /* --------------------------------------------------------------- lightbox */
@@ -620,7 +569,7 @@ body:not(:has(> .sidebar)) .main {
   background: rgba(0, 0, 0, 0.78);
 }
 
-body:has(.lightbox[open]) {
+body:has(dialog[open]) {
   overflow: hidden;
 }
 
@@ -675,6 +624,141 @@ body:has(.lightbox[open]) {
 
 .lightbox-close:hover {
   border-color: #ffffff;
+}
+
+/* --------------------------------------------------------------- exporter */
+
+.exporter {
+  border: none;
+  padding: 24px;
+  box-sizing: border-box;
+  background: transparent;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  outline: none;
+}
+
+.exporter[open] {
+  display: grid;
+  place-items: center;
+}
+
+.exporter::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.exporter-panel {
+  width: min(680px, 100%);
+  max-height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: var(--surface-page);
+  border: 1px solid var(--border-strong);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.exporter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.exporter-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.exporter-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 20px;
+}
+
+.ex-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.ex-field select {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-primary);
+  background: var(--surface-page);
+  border: 1px solid var(--border-strong);
+  padding: 7px 9px;
+}
+
+.ex-field select:disabled {
+  opacity: 0.35;
+}
+
+.ex-check {
+  flex-direction: row;
+  align-items: center;
+  align-self: end;
+  gap: 8px;
+  padding-bottom: 9px;
+}
+
+.ex-check input {
+  accent-color: var(--accent);
+  margin: 0;
+}
+
+.ex-check:has(input:disabled) {
+  opacity: 0.35;
+}
+
+.exporter-preview {
+  background: #ffffff;
+  border: 1px solid #e4e4e4;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  height: 220px;
+  box-sizing: border-box;
+}
+
+.exporter-preview.plate-dark {
+  background: #1e1e1e;
+}
+
+.exporter-preview img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.exporter-out {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.exporter-url {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.exporter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .cap-mono {
@@ -735,7 +819,6 @@ body:has(.lightbox[open]) {
 
 .note {
   background: var(--surface-sunken);
-  border-radius: var(--radius-md);
   padding: 18px 22px;
   margin-top: 40px;
   display: flex;
@@ -783,18 +866,24 @@ body:has(.lightbox[open]) {
   margin-top: 26px;
 }
 
+/* Semantic Do / Don't tones — one shared language for approval/prohibition
+   headings (02 Naming, 05 Incorrect Usage, 10 Color Combinations). Declared
+   after .s-sub and .block-label so the tone wins on those labels. */
+.tone-do {
+  color: var(--success);
+}
+
+.tone-dont {
+  color: var(--danger);
+}
+
 .dodont-head {
   font-family: var(--font-mono);
   font-size: 10.5px;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: var(--accent);
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--border-strong);
-}
-
-.is-dont .dodont-head {
-  color: var(--text-secondary);
+  border-bottom: 1px solid currentColor;
 }
 
 .dodont-list {
@@ -823,6 +912,7 @@ body:has(.lightbox[open]) {
 
 .is-dont .dd-term::before {
   content: '× ';
+  color: var(--danger);
 }
 
 .dd-note {
@@ -987,6 +1077,7 @@ a.toc-row:hover span:first-child {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -1026,7 +1117,6 @@ a.toc-row:hover span:first-child {
   padding: 14px;
   background: var(--surface-card);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
   cursor: pointer;
   font-family: inherit;
   color: var(--text-primary);
@@ -1043,7 +1133,6 @@ a.toc-row:hover span:first-child {
 
 .swatch-chip {
   height: 84px;
-  border-radius: var(--radius-md);
 }
 
 .chip-outline {
@@ -1134,7 +1223,6 @@ a.toc-row:hover span:first-child {
 .tok-chip {
   width: 22px;
   height: 22px;
-  border-radius: 4px;
   box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.25);
 }
 
@@ -1291,8 +1379,13 @@ a.toc-row:hover span:first-child {
 }
 
 .demo iframe.pin-dark {
-  background: #1e1e1e;
-  border-color: #2a2a2a;
+  background: #000000;
+  border-color: rgba(106, 110, 113, 0.4);
+}
+
+.demo iframe.pin-light {
+  background: #ffffff;
+  border-color: #e9eaeb;
 }
 
 .demo-grid {
@@ -1304,44 +1397,6 @@ a.toc-row:hover span:first-child {
 
 .demo-grid > .demo {
   margin-top: 0;
-}
-
-/* ---------------------------------------------------------------- transcripts */
-
-.transcripts {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 40px;
-}
-
-.transcript {
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-}
-
-.transcript summary {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  padding: 13px 16px;
-  cursor: pointer;
-  user-select: none;
-  transition: color var(--dur) var(--ease);
-}
-
-.transcript summary:hover {
-  color: var(--text-primary);
-}
-
-.transcript-body {
-  padding: 2px 16px 16px 16px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--text-primary);
-  line-height: 1.9;
 }
 
 /* ---------------------------------------------------------------- footer */
@@ -1359,6 +1414,13 @@ a.toc-row:hover span:first-child {
 .footer img {
   width: 118px;
   display: block;
+}
+
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
 }
 
 .footer-note {
@@ -1395,7 +1457,6 @@ a.toc-row:hover span:first-child {
    marked only by the brand highlight background. */
 .hl {
   background: var(--accent-soft-bg, rgba(100, 173, 212, 0.14));
-  border-radius: 4px;
   padding: 1px 5px;
 }
 
@@ -1448,8 +1509,7 @@ a.toc-row:hover span:first-child {
 }
 
 .dark-strip {
-  background: #1e1e1e;
-  border-radius: var(--radius-md);
+  background: #000000;
   padding: 18px 20px;
   margin-top: 20px;
   display: flex;
@@ -1511,8 +1571,7 @@ a.toc-row:hover span:first-child {
     gap: 10px 18px;
   }
 
-  .main,
-  body:not(:has(> .sidebar)) .main {
+  .main {
     grid-column: auto;
     grid-template-columns: repeat(9, minmax(0, 1fr));
     column-gap: var(--gutter);
@@ -1520,15 +1579,9 @@ a.toc-row:hover span:first-child {
   }
 
   /* The ornament bleeds off the page top, above the stacked sidebar, so the
-     guideline meta-bar no longer sits under it. The sidebar-less assets page
-     keeps the clearance (its meta-bar is still the topmost row). */
-  body:has(> .sidebar) .meta-bar {
+     meta-bar no longer sits under it. */
+  .meta-bar {
     padding-right: 0;
-  }
-
-  /* This page's cards run on the content nine here, like everything else. */
-  .ab-grid > .ab-card {
-    grid-column: span 3;
   }
 }
 
@@ -1539,8 +1592,7 @@ a.toc-row:hover span:first-child {
     --pair-b: span 3;
   }
 
-  .main,
-  body:not(:has(> .sidebar)) .main {
+  .main {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
@@ -1550,16 +1602,9 @@ a.toc-row:hover span:first-child {
     top: -28px;
   }
 
-  /* Assets page only — the :has(> .sidebar) zero-clearance rule above wins
-     on the guideline page. */
-  .meta-bar {
-    padding-right: 68px;
-  }
-
   /* Text and label/body splits widen to the full grid. */
   .section > .prose,
   .s-head > .s-lede,
-  .s-head > .s-sub,
   .section > .rules,
   .section > .note,
   .section > .notation-list,
@@ -1574,7 +1619,7 @@ a.toc-row:hover span:first-child {
 
   .cols-3 > .fig,
   .swatch-grid > .swatch,
-  .ab-grid > .ab-card {
+  .asset-grid > .asset-card {
     grid-column: span 3;
   }
 
@@ -1627,14 +1672,17 @@ a.toc-row:hover span:first-child {
     --pair-b: 1 / -1;
   }
 
-  .main,
-  body:not(:has(> .sidebar)) .main {
+  .main {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cols-3 > .fig,
-  .ab-grid > .ab-card {
+  .asset-grid > .asset-card {
     grid-column: 1 / -1;
+  }
+
+  .exporter-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .swatch-grid > .swatch {

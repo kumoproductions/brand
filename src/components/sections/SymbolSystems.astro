@@ -1,7 +1,10 @@
 ---
+import AssetCard from '../AssetCard.astro';
 import Figure from '../Figure.astro';
 import SectionHeader from '../SectionHeader.astro';
 import SphereGlyph from '../SphereGlyph.astro';
+
+const SPHERES = ['sphere-11', 'sphere-7', 'sphere-5', 'sphere-3'];
 
 interface Props {
   lang?: 'ja' | 'en';
@@ -231,4 +234,18 @@ const t = en
       <span class="cap-mono">{t.ornCap}</span>
     </figcaption>
   </figure>
+  <p class="block-label">{en ? 'Sphere assets' : 'Sphere assets / スフィア素材'}</p>
+  <div class="asset-grid">
+    {
+      SPHERES.map((stem) => (
+        <AssetCard
+          file={`${stem}.svg`}
+          src={`/content/sphere/svg/${stem}.svg`}
+          alt={`kumo™ ${stem}`}
+          label={`${stem}.svg`}
+          stem={stem}
+        />
+      ))
+    }
+  </div>
 </section>

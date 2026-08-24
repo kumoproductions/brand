@@ -11,7 +11,7 @@ export function Toast({ open = true, tone = 'inverse', title, description, onClo
       background: dark ? 'var(--surface-inverse)' : 'var(--surface-card)',
       color: dark ? 'var(--text-inverse)' : 'var(--text-primary)',
       border: dark ? '1px solid transparent' : '1px solid var(--border-default)',
-      borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-overlay)',
+      boxShadow: 'var(--shadow-overlay)',
       fontFamily: 'var(--font-body)'
     }}>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>

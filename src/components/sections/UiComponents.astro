@@ -11,15 +11,13 @@ const en = lang === 'en';
 const t = en
   ? {
       sub: 'A standard UI set built on the brand rules (React + token references). Live demos below — try them. Each component ships as a .jsx implementation, a .d.ts prop contract, and a .prompt.md usage guide',
-      note: 'Colors and states follow the guidelines: primary = Base black, accent = Night sky blue, focus ring = Sky blue, hairline-based dividers, and restrained 150ms motion. The state colors (--success / --warning / --danger) are additions required by UI, chosen as oklch values that harmonize with the palette (minimal use).',
     }
   : {
       sub: 'ブランド規定から定義した標準UIセット(React+トークン参照)。以下は実動デモ — 操作できます。各コンポーネントは .jsx 実装+.d.ts(プロップ契約)+.prompt.md(使用例)の3点構成',
-      note: '配色・状態はガイドライン準拠: プライマリ=Base black、アクセント=Night sky blue、フォーカスリング=Sky blue、ヘアライン基調・150msの控えめなモーション。状態色(--success / --warning / --danger)はUI上の必要から、パレットに調和するoklch値で追加(最小限の使用)。',
     };
 
 const demos = [
-  { title: 'Actions — Button / IconButton', path: 'components/actions/', src: '/components/actions/actions.card.html', height: 280 },
+  { title: 'Actions — Button / ArrowButton / IconButton', path: 'components/actions/', src: '/components/actions/actions.card.html', height: 330 },
   { title: 'Forms — Input / Select / Checkbox / Radio / Switch', path: 'components/forms/', src: '/components/forms/forms.card.html', height: 350 },
   { title: 'Display — Card / Badge / Tag / KumoLogo', path: 'components/display/', src: '/components/display/display.card.html', height: 430 },
   { title: 'Navigation — Tabs', path: 'components/navigation/', src: '/components/navigation/navigation.card.html', height: 170 },
@@ -40,7 +38,4 @@ const demos = [
       </div>
     ))
   }
-  <div class="prose" style="margin-top: 28px;">
-    <p style="font-size: 12px; color: var(--text-secondary);">{t.note}</p>
-  </div>
 </section>

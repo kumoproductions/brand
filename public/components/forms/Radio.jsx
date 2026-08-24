@@ -13,7 +13,7 @@ export function Radio({ checked = false, onChange, label, name, value, disabled 
         />
         <span aria-hidden="true" style={{
           width: 18, height: 18, boxSizing: 'border-box', display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          background: 'var(--surface-card)',
+          background: 'transparent',
           border: `1px solid ${checked ? 'var(--solid)' : 'var(--border-strong)'}`,
           borderRadius: 'var(--radius-full)',
           boxShadow: focus ? '0 0 0 2px var(--focus-ring)' : 'none',

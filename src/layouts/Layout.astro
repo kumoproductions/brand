@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Exporter from '../components/Exporter.astro';
 import SphereOrnament from '../components/SphereOrnament.astro';
 
 interface Props {
@@ -40,6 +41,7 @@ const {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-friendly version" />
     <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -65,6 +67,7 @@ const {
       </div>
       <p class="lightbox-cap"></p>
     </dialog>
+    <Exporter />
     <script>
       // ------------------------------------------------------------- theme
       const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
@@ -94,6 +97,20 @@ const {
       for (const frame of document.querySelectorAll('iframe')) {
         frame.addEventListener('load', () => {
           frame.contentWindow?.postMessage({ kumoTheme: isDark() ? 'dark' : 'light' }, '*');
+          // Same-origin demo cards render after babel compiles, so the height
+          // attribute is only an initial estimate — track the real content
+          // height and keep the frame exactly that tall (no inner scrollbar).
+          const doc = frame.contentDocument;
+          if (!doc?.body) return;
+          // Clip instead of scrolling inside the frame — the observer keeps
+          // the frame at the content's height, so nothing is ever hidden.
+          doc.documentElement.style.overflow = 'hidden';
+          const fit = () => {
+            const height = Math.ceil(doc.body.getBoundingClientRect().height);
+            if (height) frame.style.height = `${height}px`;
+          };
+          fit();
+          new ResizeObserver(fit).observe(doc.body);
         });
       }
 
@@ -131,7 +148,7 @@ const {
         lightboxImg.src = img.currentSrc || img.src;
         lightboxImg.alt = img.alt;
         // White artwork comes from a dark plate — keep the frame dark too.
-        const dark = !!img.closest('.ab-plate-dark, .ornament-demo');
+        const dark = !!img.closest('.plate-dark, .ornament-demo');
         lightbox.querySelector('.lightbox-frame')?.classList.toggle('lightbox-frame-dark', dark);
         const figcaption = img.closest('figure')?.querySelector('figcaption');
         const parts = figcaption
@@ -157,6 +174,92 @@ const {
 
       // Any click inside the dialog (backdrop, frame, or image) closes it.
       lightbox.addEventListener('click', () => lightbox.close());
+
+      // --------------------------------------------------------- exporter
+      const exporter = document.getElementById('exporter') as HTMLDialogElement;
+      const exAsset = document.getElementById('ex-asset') as HTMLSelectElement;
+      const exTone = document.getElementById('ex-tone') as HTMLSelectElement;
+      const exTm = document.getElementById('ex-tm') as HTMLInputElement;
+      const exFormat = document.getElementById('ex-format') as HTMLSelectElement;
+      const exWidth = document.getElementById('ex-width') as HTMLSelectElement;
+      const exQuality = document.getElementById('ex-quality') as HTMLSelectElement;
+      const exBg = document.getElementById('ex-bg') as HTMLSelectElement;
+      const exPreview = exporter.querySelector('.exporter-preview') as HTMLElement;
+      const exImg = document.getElementById('ex-img') as HTMLImageElement;
+      const exUrl = document.getElementById('ex-url') as HTMLElement;
+      const exCopyUrl = document.getElementById('ex-copy-url') as HTMLElement;
+      const exDownload = document.getElementById('ex-download') as HTMLAnchorElement;
+      const exCopySvg = document.getElementById('ex-copy-svg') as HTMLElement;
+      const exSvgLink = document.getElementById('ex-svg') as HTMLAnchorElement;
+
+      function exStem(): string {
+        const option = exAsset.selectedOptions[0];
+        const tm =
+          option.dataset.tm === 'required' || (option.dataset.tm === 'optional' && exTm.checked);
+        const tone = option.dataset.tone === 'true' ? `-${exTone.value}` : '';
+        return `${option.value}${tm ? '-tm' : ''}${tone}`;
+      }
+
+      // Renders the exact URL being exported; the fetch warms the edge cache.
+      function exUpdate() {
+        const option = exAsset.selectedOptions[0];
+        exTm.disabled = option.dataset.tm !== 'optional';
+        if (option.dataset.tm === 'required') exTm.checked = true;
+        if (option.dataset.tm === 'none') exTm.checked = false;
+        exTone.disabled = option.dataset.tone !== 'true';
+
+        const stem = exStem();
+        const params = new URLSearchParams();
+        if (exWidth.value) params.set('w', exWidth.value);
+        if (exQuality.value) params.set('q', exQuality.value);
+        if (exBg.value) params.set('bg', exBg.value);
+        const query = params.toString();
+        const path = `/i/${stem}.${exFormat.value}${query ? `?${query}` : ''}`;
+
+        exImg.src = path;
+        // White-tone artwork vanishes on the light plate unless a background
+        // is baked into the raster itself.
+        exPreview.classList.toggle(
+          'plate-dark',
+          !exTone.disabled && exTone.value === 'white' && !exBg.value
+        );
+        exUrl.textContent = location.origin + path;
+        exCopyUrl.setAttribute('data-copy', location.origin + path);
+        exDownload.href = path;
+        exDownload.setAttribute(
+          'download',
+          `kumo-${stem}${exWidth.value ? `-${exWidth.value}w` : ''}.${exFormat.value}`
+        );
+        const svgPath = `/content/${option.dataset.family}/svg/${stem}.svg`;
+        exCopySvg.setAttribute('data-copy-src', svgPath);
+        exSvgLink.href = svgPath;
+        exSvgLink.setAttribute('download', `kumo-${stem}.svg`);
+      }
+
+      for (const control of [exAsset, exTone, exTm, exFormat, exWidth, exQuality, exBg]) {
+        control.addEventListener('change', exUpdate);
+      }
+
+      document.addEventListener('click', (event) => {
+        const trigger = (event.target as HTMLElement).closest('[data-export]');
+        if (!trigger) return;
+        const stem = trigger.getAttribute('data-export') ?? '';
+        const tone = stem.match(/-(black|white)$/)?.[1];
+        let base = tone ? stem.slice(0, -(tone.length + 1)) : stem;
+        const tm = base.endsWith('-tm');
+        if (tm) base = base.slice(0, -3);
+        exAsset.value = base;
+        if (tone) exTone.value = tone;
+        exTm.checked = tm;
+        exUpdate();
+        exporter.showModal();
+      });
+
+      exporter.querySelector('.exporter-close')?.addEventListener('click', () => exporter.close());
+      // Backdrop click closes; clicks inside the panel land on children.
+      exporter.addEventListener('click', (event) => {
+        if (event.target === exporter) exporter.close();
+      });
 
       // -------------------------------------------------------- scroll spy
       const sections = [...document.querySelectorAll<HTMLElement>('main section[id]')];

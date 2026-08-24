@@ -4,9 +4,11 @@ interface Props {
   page?: string;
   title: string;
   sub?: string;
+  /* Semantic tone for the sub label (Do/Don't language — see .tone-* in global.css). */
+  tone?: 'do' | 'dont';
 }
 
-const { kicker, page, title, sub } = Astro.props;
+const { kicker, page, title, sub, tone } = Astro.props;
 ---
 
 <header class="s-head">
@@ -14,8 +16,8 @@ const { kicker, page, title, sub } = Astro.props;
   <div class="s-title-row">
     {page && <span class="page-badge">{page}</span>}
     <h2 class="s-title">{title}</h2>
+    {sub && <span class:list={['s-sub', tone && `tone-${tone}`]}>{sub}</span>}
   </div>
-  {sub && <p class="s-sub">{sub}</p>}
   {
     Astro.slots.has('default') && (
       <div class="prose s-lede">

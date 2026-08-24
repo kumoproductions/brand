@@ -12,16 +12,18 @@ export function Tag({ selected = false, onClick, onRemove, disabled = false, chi
       tabIndex={interactive ? 0 : undefined}
       onKeyDown={interactive ? (e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }) : undefined}
       style={{
+        // Site idiom: transparent pill with a gray hairline (product tags);
+        // selected fills like the contact form's checked segment.
         display: 'inline-flex', alignItems: 'center', gap: 6,
-        height: 28, padding: '0 10px', boxSizing: 'border-box',
-        background: selected ? 'var(--solid)' : hover && interactive ? 'var(--surface-sunken)' : 'var(--surface-card)',
+        height: 26, padding: '0 12px', boxSizing: 'border-box',
+        background: selected ? 'var(--solid)' : 'transparent',
         color: selected ? 'var(--on-solid)' : 'var(--text-primary)',
-        border: `1px solid ${selected ? 'var(--solid)' : 'var(--border-strong)'}`,
-        borderRadius: 'var(--radius-md)',
+        border: `1px solid ${selected ? 'var(--solid)' : hover && interactive ? 'var(--text-primary)' : 'var(--border-strong)'}`,
+        borderRadius: 'var(--radius-full)',
         fontFamily: 'var(--font-body)', fontSize: 'var(--text-sm)', lineHeight: 1,
         cursor: interactive ? 'pointer' : 'default', userSelect: 'none',
         opacity: disabled ? 0.4 : 1,
-        transition: 'background var(--dur) var(--ease), color var(--dur) var(--ease)'
+        transition: 'background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease)'
       }}
     >
       {children}

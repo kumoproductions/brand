@@ -1,12 +1,15 @@
 import React from 'react';
 
+/* Site navigation idiom: plain text items, no rail; a 1px underline grows
+   from the left on hover and stays full-width on the active item. */
 export function Tabs({ items = [], value, onChange, size = 'md' }) {
   const list = items.map(it => (typeof it === 'string' ? { value: it, label: it } : it));
   const [hover, setHover] = React.useState(null);
   return (
-    <div role="tablist" style={{ display: 'flex', gap: 'var(--space-6)', borderBottom: '1px solid var(--border-default)', fontFamily: 'var(--font-body)' }}>
+    <div role="tablist" style={{ display: 'flex', gap: 'var(--space-6)', fontFamily: 'var(--font-body)' }}>
       {list.map(it => {
         const active = it.value === value;
+        const lit = active || (hover === it.value && !it.disabled);
         return (
           <button
             key={it.value}
@@ -18,16 +21,24 @@ export function Tabs({ items = [], value, onChange, size = 'md' }) {
             onMouseLeave={() => setHover(null)}
             style={{
               appearance: 'none', background: 'none', border: 'none', margin: 0,
-              padding: size === 'sm' ? '6px 0 8px 0' : '8px 0 10px 0',
+              position: 'relative',
+              padding: size === 'sm' ? '4px 0 6px 0' : '6px 0 8px 0',
               fontFamily: 'inherit', fontSize: size === 'sm' ? 'var(--text-sm)' : 'var(--text-base)',
-              fontWeight: active ? 'var(--weight-semibold)' : 'var(--weight-regular)',
-              color: active ? 'var(--text-primary)' : hover === it.value ? 'var(--text-primary)' : 'var(--text-secondary)',
-              boxShadow: active ? 'inset 0 -2px 0 0 var(--solid)' : 'none',
+              fontWeight: 'var(--weight-regular)',
+              color: lit ? 'var(--text-primary)' : 'var(--text-secondary)',
               cursor: it.disabled ? 'not-allowed' : 'pointer',
               opacity: it.disabled ? 0.4 : 1,
               transition: 'color var(--dur) var(--ease)'
             }}
-          >{it.label}</button>
+          >
+            {it.label}
+            <span aria-hidden="true" style={{
+              position: 'absolute', left: 0, bottom: 0, height: 1,
+              width: lit ? '100%' : 0,
+              background: 'currentColor',
+              transition: 'width var(--dur) var(--ease)'
+            }}></span>
+          </button>
         );
       })}
     </div>

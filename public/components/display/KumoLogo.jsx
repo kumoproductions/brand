@@ -21,7 +21,7 @@ export function KumoLogo({ variant = 'primary-tm', height = 20, inverse = false,
     <img
       src={basePath + a.src}
       alt={variant === 'symbol' ? 'kumo™ symbol' : 'kumo.productions™'}
-      style={{ height, width: height * a.ratio, display: 'block', filter: inverse ? 'invert(1)' : 'none', ...style }}
+      style={{ height, width: height * a.ratio, display: 'block', filter: inverse ? 'invert(var(--invert-on-inverse, 1))' : 'none', ...style }}
     />
   );
 }

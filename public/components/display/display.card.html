@@ -41,7 +41,7 @@ function Demo(){
       {['Motion','3DCG','Live','MV'].map(t => <Tag key={t} selected={sel.includes(t)} onClick={()=>toggle(t)}>{t}</Tag>)}
       <Tag onRemove={()=>{}}>Removable</Tag>
     </div>
-    <div style={{display:'flex', gap:24, alignItems:'center', flexWrap:'wrap', background:'#fff', border:'1px solid var(--border-default)', borderRadius:10, padding:16}}>
+    <div style={{display:'flex', gap:24, alignItems:'center', flexWrap:'wrap', background:'#fff', border:'1px solid var(--border-default)', padding:16}}>
       <KumoLogo variant="symbol" height={56} basePath="../../" />
       <KumoLogo variant="primary-tm" height={16} basePath="../../" />
       <KumoLogo variant="secondary-tm" height={30} basePath="../../" />

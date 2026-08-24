@@ -12,9 +12,9 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  --radius-sm: 4px;
-  --radius-md: 6px;  /* default control radius — echoes particle corner R=2a */
-  --radius-lg: 10px;
+  /* Shapes are binary, following the current kumo.productions site: sharp
+     rectangles (no corner rounding) or spheres. --radius-full is the only
+     radius token — pills and circles (Tag, Badge, Radio, Switch). */
   --radius-full: 999px;
 
   --control-h-sm: 32px;
@@ -25,6 +25,8 @@
   --shadow-card: 0 1px 2px rgba(30, 30, 30, 0.06);
   --shadow-overlay: 0 12px 40px rgba(30, 30, 30, 0.18);
 
-  --dur: 150ms;
-  --ease: cubic-bezier(0.2, 0, 0, 1);
+  /* Motion follows the kumo.productions site: ease-out-expo, 200/300ms. */
+  --dur: 200ms;
+  --dur-slow: 300ms; /* arrow slides, underline growth */
+  --ease: cubic-bezier(0.19, 1, 0.22, 1); /* ease-out-expo */
 }

@@ -11,12 +11,13 @@ export function Dialog({ open = false, title, meta, onClose, footer, width = 480
   return (
     <div
       onClick={e => { if (e.target === e.currentTarget && onClose) onClose(); }}
-      style={{ position: 'fixed', inset: 0, background: 'var(--scrim)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 'var(--space-6)' }}
+      style={{ position: 'fixed', inset: 0, background: 'var(--scrim)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 'var(--space-6)' }}
     >
       <div role="dialog" aria-modal="true" style={{
         width, maxWidth: '100%', maxHeight: '85vh', overflow: 'auto', boxSizing: 'border-box',
         background: 'var(--surface-card)', color: 'var(--text-primary)',
-        borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-overlay)',
+        border: '1px solid var(--border-default)',
+        boxShadow: 'var(--shadow-overlay)',
         fontFamily: 'var(--font-body)', display: 'flex', flexDirection: 'column'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-4)', padding: 'var(--space-5) var(--space-6)', borderBottom: '1px solid var(--border-default)' }}>

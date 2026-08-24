@@ -15,14 +15,14 @@ const t = en
       spacingKicker: 'Spacing — grid unit a = 4px',
       radiusKicker: 'Radius / Elevation / Motion',
       radiusNote: [
-        '--radius-sm 4 / -md 6 / -lg 10 (radii echo the particle R=2a)',
+        'No corner rounding — shapes are rectangles or spheres (--radius-full: pills and circles), following the kumo.productions site',
         'Dividers are 1px hairlines. Shadows are limited to --shadow-card (very light) and --shadow-overlay',
-        '--dur 150ms / --ease cubic-bezier(0.2, 0, 0, 1)',
+        '--dur 200ms / --dur-slow 300ms / --ease cubic-bezier(0.19, 1, 0.22, 1) = ease-out-expo',
         'focus ring: 2px rgba(100,173,212,.55)',
       ],
       darkLabel: 'Dark mode',
       darkProse:
-        ' flips every semantic token. The ground becomes Space black, text Base white, and the accent Sky blue (Night sky blue lacks contrast on black, in line with the prohibited pairings). Solid controls (--solid / --on-solid) swap black and white.',
+        ' flips every semantic token, following the current kumo.productions site: the ground becomes Base black with Cloud white text, panels sit on Space black, hairlines use Cloudiness gray, and the accent is Sky blue (Night sky blue lacks contrast on black, in line with the prohibited pairings). Solid controls (--solid / --on-solid) swap black and white.',
       spaceNote: '--space-1…16 (4→64px)',
     }
   : {
@@ -31,14 +31,14 @@ const t = en
       spacingKicker: 'Spacing — grid unit a = 4px',
       radiusKicker: 'Radius / Elevation / Motion',
       radiusNote: [
-        '--radius-sm 4 / -md 6 / -lg 10(角丸はパーティクル R=2a に呼応)',
+        '角丸は用いない — 形状は矩形とスフィア(--radius-full: ピル・円)の二値(kumo.productions サイト準拠)',
         '区切りは1pxヘアライン。影は --shadow-card(極薄)と --shadow-overlay のみ',
-        '--dur 150ms / --ease cubic-bezier(0.2, 0, 0, 1)',
+        '--dur 200ms / --dur-slow 300ms / --ease cubic-bezier(0.19, 1, 0.22, 1) = ease-out-expo',
         'focus ring: 2px rgba(100,173,212,.55)',
       ],
       darkLabel: 'Dark mode / ダークモード',
       darkProse:
-        ' で全セマンティックトークンが反転します。地は Space black、文字は Base white、アクセントは Sky blue(Night sky blue は黒地でコントラスト不足のため禁止配色に準拠)。ソリッド系コントロール(--solid / --on-solid)は白黒が反転します。',
+        ' で全セマンティックトークンが反転します。配色は現行の kumo.productions サイトに準拠 — 地は Base black、文字は Cloud white、パネルは Space black、ヘアラインは Cloudiness gray、アクセントは Sky blue(Night sky blue は黒地でコントラスト不足のため禁止配色に準拠)。ソリッド系コントロール(--solid / --on-solid)は白黒が反転します。',
       spaceNote: '--space-1…16(4→64px)',
     };
 
@@ -54,10 +54,13 @@ const miniTokens = [
 ];
 
 const darkTokens = [
-  { chip: 'background: #1E1E1E; border: 1px solid rgba(255,255,255,0.3);', name: '--surface-page #1E1E1E' },
-  { chip: 'background: #000000; border: 1px solid rgba(255,255,255,0.12);', name: '--surface-sunken #000' },
-  { chip: 'background: #FFFFFF;', name: '--text-primary / --solid #FFF' },
+  { chip: 'background: #000000; border: 1px solid #6A6E71;', name: '--surface-page #000' },
+  { chip: 'background: #1E1E1E; border: 1px solid rgba(106,110,113,0.4);', name: '--surface-card #1E1E1E' },
+  { chip: 'background: #0F0F0F; border: 1px solid rgba(106,110,113,0.4);', name: '--surface-sunken #0F0F0F' },
+  { chip: 'background: #F7F7F7;', name: '--text-primary #F7F7F7' },
   { chip: 'background: #9BA0A3;', name: '--text-secondary #9BA0A3' },
+  { chip: 'background: #6A6E71;', name: '--border-strong #6A6E71' },
+  { chip: 'background: #FFFFFF;', name: '--solid #FFF' },
   { chip: 'background: #64ADD4;', name: '--accent #64ADD4' },
 ];
 
@@ -88,10 +91,9 @@ const spaces = [4, 8, 12, 16, 24, 32, 48, 64];
     <div>
       <p class="kicker">{t.radiusKicker}</p>
       <div class="demo-row">
-        <span class="radius-demo" style="border-radius: 4px;"></span>
-        <span class="radius-demo" style="border-radius: 6px;"></span>
-        <span class="radius-demo" style="border-radius: 10px;"></span>
-        <span class="radius-demo" style="border-radius: 10px; border-color: #e9eaeb; box-shadow: 0 12px 40px rgba(30, 30, 30, 0.18);"></span>
+        <span class="radius-demo"></span>
+        <span class="radius-demo" style="border-radius: 999px;"></span>
+        <span class="radius-demo" style="border-color: #e9eaeb; box-shadow: 0 12px 40px rgba(30, 30, 30, 0.18);"></span>
       </div>
       <div class="demo-note" style="margin-top: 12px;">
         {t.radiusNote.map((line, i) => <>{i > 0 && <br />}{line}</>)}
@@ -132,12 +134,13 @@ const spaces = [4, 8, 12, 16, 24, 32, 48, 64];
   </div>
   <div class="demo-grid">
     <div class="demo">
-      <div class="demo-head"><span class="demo-path">Actions — light</span></div>
-      <iframe src="/components/actions/actions.card.html" title="Actions light" height="280"></iframe>
+      <div class="demo-head"><span class="demo-path">Actions — light(?theme=light)</span></div>
+      <iframe src="/components/actions/actions.card.html?theme=light" title="Actions light" height="330" class="pin-light"
+      ></iframe>
     </div>
     <div class="demo">
       <div class="demo-head"><span class="demo-path">Actions — dark(?theme=dark)</span></div>
-      <iframe src="/components/actions/actions.card.html?theme=dark" title="Actions dark" height="280" class="pin-dark"
+      <iframe src="/components/actions/actions.card.html?theme=dark" title="Actions dark" height="330" class="pin-dark"
       ></iframe>
     </div>
     <div class="demo">

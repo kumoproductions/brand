@@ -1,46 +1,60 @@
-// Build-time model for the asset browser.
+// Build-time model of content/, the distribution source of truth.
 //
-// content/<category>/svg/ is the source of truth for the logo system: every
-// raster download is a URL the worker renders on demand (/i/<stem>.<ext>?w=),
-// never a file on disk. Categories with no vector origin (banner, favicon,
+// Vector families (logotype, icon, sphere) ship as SVG only; rasters are
+// rendered on demand by the worker. Their stems decompose as
+// `<base>[-tm]-<tone>`, which getExportBases() derives for the raster
+// exporter dialog. Categories with no vector origin (banner, favicon,
 // typestyle) list the files they actually ship, mirrored under /content/**.
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-export interface AssetVariant {
-  label: string;
+export interface AssetFile {
+  name: string;
   url: string;
   ext: string;
-  /** Byte size, known only for files that exist on disk. */
-  size?: number;
-  width?: number;
+  size: number;
 }
 
-export interface AssetGroup {
+export interface StaticGroup {
   base: string;
-  preview?: string;
-  /** Source SVG, present for vector-backed groups. */
-  svg?: string;
-  /** Artwork is entirely light, so it needs a dark plate to be visible. */
-  dark?: boolean;
-  variants: AssetVariant[];
+  files: AssetFile[];
 }
 
-export interface AssetCategory {
-  name: string;
-  groups: AssetGroup[];
+export interface VectorStem {
+  family: string;
+  stem: string;
+  url: string;
+}
+
+export interface ExportBase {
+  base: string;
+  family: string;
+  /** Whether -black/-white tone forms exist. */
+  tone: boolean;
+  tm: 'optional' | 'required' | 'none';
 }
 
 const CONTENT_DIR = join(process.cwd(), 'content');
 
-const VECTOR_CATEGORIES = ['logotype', 'icon', 'sphere'];
-const STATIC_CATEGORIES = ['banner', 'favicon', 'typestyle'];
+export const VECTOR_FAMILIES = ['logotype', 'icon', 'sphere'];
+export const STATIC_CATEGORIES = ['banner', 'favicon', 'typestyle'];
 
-const GENERATED_WIDTHS = [512, 256, 128, 64];
-const GENERATED_FORMATS = ['png', 'webp'];
+// Guideline vocabulary order for the exporter's asset select; assets outside
+// the list sort alphabetically after it.
+const BASE_ORDER = [
+  'logotype-primary',
+  'logotype-secondary',
+  'logotype-tertiary',
+  'logotype-abbreviation',
+  'logotype-microspace',
+  'logosystem',
+  'icon',
+  'sphere-11',
+  'sphere-7',
+  'sphere-5',
+  'sphere-3',
+];
 
-// Preferred preview format, best-looking first; ties break to the largest file.
-const PREVIEW_ORDER = ['svg', 'webp', 'jpg', 'jpeg', 'png'];
 const EXT_ORDER = [
   'svg',
   'png',
@@ -54,8 +68,11 @@ const EXT_ORDER = [
   'mjk',
 ];
 
+const TONE_SUFFIX = /-(black|white)$/;
+
 interface WalkedFile {
   relPath: string;
+  name: string;
   ext: string;
   stem: string;
   size: number;
@@ -72,6 +89,7 @@ function walk(dir: string, files: WalkedFile[] = []): WalkedFile[] {
     const dot = entry.name.lastIndexOf('.');
     files.push({
       relPath: relative(CONTENT_DIR, full).replaceAll('\\', '/'),
+      name: entry.name,
       ext: dot > 0 ? entry.name.slice(dot + 1).toLowerCase() : '',
       stem: dot > 0 ? entry.name.slice(0, dot) : entry.name,
       size: statSync(full).size,
@@ -86,86 +104,78 @@ export function formatSize(bytes: number): string {
   return `${bytes} B`;
 }
 
-function pickPreview(variants: AssetVariant[]): string | undefined {
-  for (const ext of PREVIEW_ORDER) {
-    const candidates = variants.filter(
-      (variant) => variant.ext === ext && variant.size !== undefined
-    );
-    if (candidates.length === 0) continue;
-    return candidates.reduce((best, variant) =>
-      (variant.size ?? 0) > (best.size ?? 0) ? variant : best
-    ).url;
-  }
-  return undefined;
-}
-
-// Artwork drawn entirely in white vanishes on the default light plate.
-function isLightArtwork(svgSource: string): boolean {
-  const shapes =
-    svgSource.match(
-      /<(?:path|rect|circle|ellipse|polygon|polyline)\b[^>]*>/g
-    ) ?? [];
-  return (
-    shapes.length > 0 &&
-    shapes.every((shape) => /fill:\s*#(fff|ffffff)\b/i.test(shape))
-  );
-}
-
-// One group per SVG: the vector itself plus the rasters the worker can render.
-function vectorGroups(category: string): AssetGroup[] {
-  return walk(join(CONTENT_DIR, category, 'svg'))
+export function getVectorStems(family: string): VectorStem[] {
+  return walk(join(CONTENT_DIR, family, 'svg'))
     .filter((file) => file.ext === 'svg')
     .toSorted((a, b) => a.stem.localeCompare(b.stem))
-    .map((file) => {
-      const svg = `/content/${file.relPath}`;
-      return {
-        base: file.stem,
-        preview: svg,
-        svg,
-        dark: isLightArtwork(
-          readFileSync(join(CONTENT_DIR, file.relPath), 'utf8')
-        ),
-        variants: [
-          { label: 'SVG', url: svg, ext: 'svg', size: file.size },
-          ...GENERATED_FORMATS.flatMap((ext) =>
-            GENERATED_WIDTHS.map((width) => ({
-              label: `${ext.toUpperCase()} ${width}w`,
-              url: `/i/${file.stem}.${ext}?w=${width}`,
-              ext,
-              width,
-            }))
-          ),
-        ],
-      };
-    });
+    .map((file) => ({
+      family,
+      stem: file.stem,
+      url: `/content/${file.relPath}`,
+    }));
 }
 
-// Files with no vector origin are listed exactly as they ship.
-function staticGroups(category: string): AssetGroup[] {
-  const groups = new Map<string, AssetGroup>();
-  for (const file of walk(join(CONTENT_DIR, category))) {
-    const group = groups.get(file.stem) ?? { base: file.stem, variants: [] };
-    group.variants.push({
-      label: file.ext.toUpperCase(),
+export function getStaticFiles(category: string): AssetFile[] {
+  return walk(join(CONTENT_DIR, category))
+    .toSorted(
+      (a, b) =>
+        a.stem.localeCompare(b.stem) ||
+        EXT_ORDER.indexOf(a.ext) - EXT_ORDER.indexOf(b.ext)
+    )
+    .map((file) => ({
+      name: file.name,
       url: `/content/${file.relPath}`,
       ext: file.ext,
       size: file.size,
-    });
-    groups.set(file.stem, group);
-  }
-
-  for (const group of groups.values()) {
-    group.variants = group.variants.toSorted(
-      (a, b) => EXT_ORDER.indexOf(a.ext) - EXT_ORDER.indexOf(b.ext)
-    );
-    group.preview = pickPreview(group.variants);
-  }
-  return [...groups.values()].toSorted((a, b) => a.base.localeCompare(b.base));
+    }));
 }
 
-export function getAssetLibrary(): AssetCategory[] {
-  return [
-    ...VECTOR_CATEGORIES.map((name) => ({ name, groups: vectorGroups(name) })),
-    ...STATIC_CATEGORIES.map((name) => ({ name, groups: staticGroups(name) })),
-  ];
+export function getStaticGroups(category: string): StaticGroup[] {
+  const groups = new Map<string, StaticGroup>();
+  for (const file of getStaticFiles(category)) {
+    const base = file.name.slice(0, file.name.lastIndexOf('.'));
+    const group = groups.get(base) ?? { base, files: [] };
+    group.files.push(file);
+    groups.set(base, group);
+  }
+  return [...groups.values()];
+}
+
+export function getExportBases(): ExportBase[] {
+  const bases = new Map<
+    string,
+    { family: string; tones: Set<string>; tm: Set<boolean> }
+  >();
+  for (const family of VECTOR_FAMILIES) {
+    for (const { stem } of getVectorStems(family)) {
+      const tone = stem.match(TONE_SUFFIX)?.[1];
+      let base = stem.replace(TONE_SUFFIX, '');
+      const tm = base.endsWith('-tm');
+      if (tm) base = base.slice(0, -'-tm'.length);
+      const entry = bases.get(base) ?? {
+        family,
+        tones: new Set<string>(),
+        tm: new Set<boolean>(),
+      };
+      if (tone) entry.tones.add(tone);
+      entry.tm.add(tm);
+      bases.set(base, entry);
+    }
+  }
+  const rank = (base: string) => {
+    const index = BASE_ORDER.indexOf(base);
+    return index === -1 ? BASE_ORDER.length : index;
+  };
+  return [...bases]
+    .toSorted(([a], [b]) => rank(a) - rank(b) || a.localeCompare(b))
+    .map(([base, entry]) => ({
+      base,
+      family: entry.family,
+      tone: entry.tones.size > 0,
+      tm: entry.tm.has(true)
+        ? entry.tm.has(false)
+          ? 'optional'
+          : 'required'
+        : 'none',
+    }));
 }

@@ -1,5 +1,7 @@
 ---
+import AssetCard from '../AssetCard.astro';
 import SectionHeader from '../SectionHeader.astro';
+import { formatSize, getStaticFiles } from '../../utils/assetLibrary';
 
 interface Props {
   lang?: 'ja' | 'en';
@@ -7,6 +9,8 @@ interface Props {
 
 const { lang = 'ja' } = Astro.props;
 const en = lang === 'en';
+
+const favicons = getStaticFiles('favicon');
 
 const lede = en
   ? [
@@ -47,5 +51,31 @@ const lede = en
         <a class="chip-btn" href="/assets/svg/symbol-central.svg" download="kumo-symbol-central.svg">SVG ↓</a>
       </div>
     </div>
+  </div>
+  <p class="block-label">{en ? 'Icon & favicons' : 'Icon & favicons / アイコン・ファビコン'}</p>
+  <div class="asset-grid">
+    <AssetCard
+      file="icon-black.svg"
+      src="/content/icon/svg/icon-black.svg"
+      alt="kumo™ icon — black plate"
+      label="icon-black.svg"
+      stem="icon-black"
+    />
+    <AssetCard
+      file="icon-white.svg"
+      src="/content/icon/svg/icon-white.svg"
+      alt="kumo™ icon — white plate"
+      label="icon-white.svg"
+      stem="icon-white"
+    />
+  </div>
+  <div class="file-list">
+    {
+      favicons.map((file) => (
+        <a class="chip-btn" href={file.url} download={file.name}>
+          {file.name} ↓ <span class="chip-size">{formatSize(file.size)}</span>
+        </a>
+      ))
+    }
   </div>
 </section>

@@ -5,10 +5,14 @@ interface Props {
   label?: string;
   imgWidth?: string;
   plateH?: string;
+  /** Source path override; defaults to the display copy under /assets/svg/. */
+  src?: string;
+  /** Distribution stem — adds an Export chip that opens the raster exporter. */
+  stem?: string;
 }
 
-const { file, alt, label, imgWidth, plateH } = Astro.props;
-const src = `/assets/svg/${file}`;
+const { file, alt, label, imgWidth, plateH, stem } = Astro.props;
+const src = Astro.props.src ?? `/assets/svg/${file}`;
 const download = `kumo-${file}`;
 ---
 
@@ -21,6 +25,11 @@ const download = `kumo-${file}`;
     <div class="asset-actions">
       <button class="chip-btn" type="button" data-copy-src={src}><span class="copy-label">Copy SVG</span></button>
       <a class="chip-btn" href={src} download={download}>SVG ↓</a>
+      {stem && (
+        <button class="chip-btn" type="button" data-export={stem}>
+          Export…
+        </button>
+      )}
     </div>
   </div>
 </div>

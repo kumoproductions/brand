@@ -20,14 +20,14 @@ export function IconButton({ label, variant = 'ghost', size = 'md', disabled = f
       style={{
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         width: SZ[size] || SZ.md, height: SZ[size] || SZ.md, boxSizing: 'border-box', padding: 0,
-        color: 'var(--text-primary)',
-        background: hover && !disabled ? 'var(--surface-sunken)' : 'transparent',
-        border: outlined ? '1px solid var(--border-strong)' : '1px solid transparent',
-        borderRadius: 'var(--radius-md)',
+        // Site idiom: icon controls shift color only (text-cloud -> white).
+        color: hover && !disabled ? 'var(--text-primary)' : 'var(--text-secondary)',
+        background: 'transparent',
+        border: `1px solid ${outlined ? (hover && !disabled ? 'var(--text-primary)' : 'var(--border-strong)') : 'transparent'}`,
         boxShadow: focus ? '0 0 0 2px var(--focus-ring)' : 'none',
         opacity: disabled ? 0.4 : 1,
         cursor: disabled ? 'not-allowed' : 'pointer',
-        transition: 'background var(--dur) var(--ease), box-shadow var(--dur) var(--ease)'
+        transition: 'color var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease)'
       }}
     >{children}</button>
   );
