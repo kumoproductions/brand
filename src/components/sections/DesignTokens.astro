@@ -1,0 +1,154 @@
+---
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const t = en
+  ? {
+      sub: 'CSS tokens derived from the brand rules — styles.css imports tokens/colors, typography, and spacing',
+      semanticKicker: 'Semantic colors — full definitions in',
+      spacingKicker: 'Spacing — grid unit a = 4px',
+      radiusKicker: 'Radius / Elevation / Motion',
+      radiusNote: [
+        '--radius-sm 4 / -md 6 / -lg 10 (radii echo the particle R=2a)',
+        'Dividers are 1px hairlines. Shadows are limited to --shadow-card (very light) and --shadow-overlay',
+        '--dur 150ms / --ease cubic-bezier(0.2, 0, 0, 1)',
+        'focus ring: 2px rgba(100,173,212,.55)',
+      ],
+      darkLabel: 'Dark mode',
+      darkProse:
+        ' flips every semantic token. The ground becomes Space black, text Base white, and the accent Sky blue (Night sky blue lacks contrast on black, in line with the prohibited pairings). Solid controls (--solid / --on-solid) swap black and white.',
+      spaceNote: '--space-1…16 (4→64px)',
+    }
+  : {
+      sub: 'ブランド規定から定義したCSSトークン — styles.css が tokens/colors・typography・spacing を読み込みます',
+      semanticKicker: 'Semantic colors — 定義一覧は',
+      spacingKicker: 'Spacing — grid unit a = 4px',
+      radiusKicker: 'Radius / Elevation / Motion',
+      radiusNote: [
+        '--radius-sm 4 / -md 6 / -lg 10(角丸はパーティクル R=2a に呼応)',
+        '区切りは1pxヘアライン。影は --shadow-card(極薄)と --shadow-overlay のみ',
+        '--dur 150ms / --ease cubic-bezier(0.2, 0, 0, 1)',
+        'focus ring: 2px rgba(100,173,212,.55)',
+      ],
+      darkLabel: 'Dark mode / ダークモード',
+      darkProse:
+        ' で全セマンティックトークンが反転します。地は Space black、文字は Base white、アクセントは Sky blue(Night sky blue は黒地でコントラスト不足のため禁止配色に準拠)。ソリッド系コントロール(--solid / --on-solid)は白黒が反転します。',
+      spaceNote: '--space-1…16(4→64px)',
+    };
+
+const miniTokens = [
+  { chip: 'background: #FFFFFF; border: 1px solid #E9EAEB;', name: '--surface-page / card' },
+  { chip: 'background: #F7F7F7; border: 1px solid #E9EAEB;', name: '--surface-sunken' },
+  { chip: 'background: #1E1E1E;', name: '--surface-inverse' },
+  { chip: 'background: #000000;', name: '--text-primary' },
+  { chip: 'background: #6A6E71;', name: '--text-secondary' },
+  { chip: 'background: #C9CCCE;', name: '--border-strong' },
+  { chip: 'background: #1E4B6B;', name: '--accent' },
+  { chip: 'background: #64ADD4;', name: '--accent-soft / focus' },
+];
+
+const darkTokens = [
+  { chip: 'background: #1E1E1E; border: 1px solid rgba(255,255,255,0.3);', name: '--surface-page #1E1E1E' },
+  { chip: 'background: #000000; border: 1px solid rgba(255,255,255,0.12);', name: '--surface-sunken #000' },
+  { chip: 'background: #FFFFFF;', name: '--text-primary / --solid #FFF' },
+  { chip: 'background: #9BA0A3;', name: '--text-secondary #9BA0A3' },
+  { chip: 'background: #64ADD4;', name: '--accent #64ADD4' },
+];
+
+const spaces = [4, 8, 12, 16, 24, 32, 48, 64];
+---
+
+<section id="ds-tokens" class="section">
+  <SectionHeader kicker="Design System Extension" page="12" title="Design Tokens" sub={t.sub} />
+  <div class="tok-cols">
+    <div>
+      <p class="kicker">{t.semanticKicker} <a href="#color">Color Style</a></p>
+      <div class="mini-grid">
+        {
+          miniTokens.map((token) => (
+            <span class="mini-item">
+              <span class="tok-chip" style={token.chip} />
+              {token.name}
+            </span>
+          ))
+        }
+      </div>
+      <p class="kicker" style="margin-top: 32px;">{t.spacingKicker}</p>
+      <div class="demo-row" style="align-items: flex-end;">
+        {spaces.map((size) => <span style={`width: ${size}px; height: ${size}px; background: var(--solid);`}></span>)}
+        <span class="demo-note">{t.spaceNote}</span>
+      </div>
+    </div>
+    <div>
+      <p class="kicker">{t.radiusKicker}</p>
+      <div class="demo-row">
+        <span class="radius-demo" style="border-radius: 4px;"></span>
+        <span class="radius-demo" style="border-radius: 6px;"></span>
+        <span class="radius-demo" style="border-radius: 10px;"></span>
+        <span class="radius-demo" style="border-radius: 10px; border-color: #e9eaeb; box-shadow: 0 12px 40px rgba(30, 30, 30, 0.18);"></span>
+      </div>
+      <div class="demo-note" style="margin-top: 12px;">
+        {t.radiusNote.map((line, i) => <>{i > 0 && <br />}{line}</>)}
+      </div>
+      <p class="kicker" style="margin-top: 28px;">Files</p>
+      <div class="note-mono" style="margin-top: 8px; font-size: 10.5px;">
+        styles.css → tokens/colors.css / tokens/typography.css / tokens/spacing.css<br />assets/svg/(ロゴ・シンボル)
+      </div>
+      <div class="asset-actions" style="margin-top: 16px;">
+        <button class="chip-btn" type="button" data-copy-src="/tokens/colors.css">
+          <span class="copy-label">Copy colors.css</span>
+        </button>
+        <button class="chip-btn" type="button" data-copy-src="/tokens/typography.css">
+          <span class="copy-label">Copy typography.css</span>
+        </button>
+        <button class="chip-btn" type="button" data-copy-src="/tokens/spacing.css">
+          <span class="copy-label">Copy spacing.css</span>
+        </button>
+        <a class="chip-btn" href="/styles.css" download="kumo-styles.css">styles.css ↓</a>
+      </div>
+    </div>
+  </div>
+  <p class="block-label">{t.darkLabel}</p>
+  <div class="prose">
+    <p class:list={{ en }}>
+      <span class="inline-code">&lt;html data-theme="dark"&gt;</span>{t.darkProse}
+    </p>
+  </div>
+  <div class="dark-strip">
+    {
+      darkTokens.map((token) => (
+        <span class="mini-item">
+          <span class="tok-chip" style={token.chip} />
+          {token.name}
+        </span>
+      ))
+    }
+  </div>
+  <div class="demo-grid">
+    <div class="demo">
+      <div class="demo-head"><span class="demo-path">Actions — light</span></div>
+      <iframe src="/components/actions/actions.card.html" title="Actions light" height="280"></iframe>
+    </div>
+    <div class="demo">
+      <div class="demo-head"><span class="demo-path">Actions — dark(?theme=dark)</span></div>
+      <iframe src="/components/actions/actions.card.html?theme=dark" title="Actions dark" height="280" class="pin-dark"
+      ></iframe>
+    </div>
+    <div class="demo">
+      <div class="demo-head"><span class="demo-path">Forms — dark</span></div>
+      <iframe src="/components/forms/forms.card.html?theme=dark" title="Forms dark" height="350" class="pin-dark"
+      ></iframe>
+    </div>
+    <div class="demo">
+      <div class="demo-head"><span class="demo-path">Feedback — dark</span></div>
+      <iframe src="/components/feedback/feedback.card.html?theme=dark" title="Feedback dark" height="350" class="pin-dark"
+      ></iframe>
+    </div>
+  </div>
+</section>

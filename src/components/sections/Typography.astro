@@ -1,0 +1,122 @@
+---
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const lede = en
+  ? [
+      'Each of these typefaces has an impersonal quality that sits naturally with the elements that make up kumo.productions™, forming a highly legible typographic system.',
+      'Use Helvetica Now Display in combination with the logotype and for headings; use Helvetica Now Text for print and for text in small spaces.',
+      'The Japanese typeface, TP Tokyo City font, may be combined freely in both headings and body text.',
+      'For Japanese–English settings, use the bundled composite font file, kumo.productions.type-style, or combine the typefaces at 100% width and height.',
+      'Only when the above is unavailable, use kumo.productions.type-style2, composed of the SECONDARY typefaces, or combine those typefaces at 100% width and height.',
+      'For character-spacing settings, always use the bundled kumo.yakumono-typestyle.',
+      'As a rule, use the PRIMARY typefaces. Avoid the SECONDARY typefaces, Inter and BIZ UDPGothic, wherever possible — choose them only when the PRIMARY typefaces cannot be used.',
+      'Combining PRIMARY and SECONDARY typefaces within the same text or the same medium is prohibited.',
+      'The MONOSPACE typeface must be used as standalone text, never combined with any other typeface within a passage.',
+    ]
+  : [
+      'これらの書体はいずれも、その無機質さが kumo.productions™ を構成する要素と親和性が高く、また視認性に非常に優れたタイポグラフィーシステムです。',
+      'Helvetica Now Display は、ロゴタイプとの組み合わせや見出しに使用し、印刷媒体や小さいスペースのテキストなどは Helvetica Now text を使用してください。',
+      '日本語書体である東京シティーフォントについては見出し、テキスト関係なく組み合わせ使用してください。',
+      '日本語と英語の組み合わせは、同封された合成フォントファイル、kumo.productions.type-style。またはいずれも縦横 100% の書体を組み合わせて使用してください。',
+      'また、上が使用できない場合に限り、SECONDARY で定めた書体で構成される kumo.productions.type-style2 を使用するか、いずれも縦横 100% の書体を組み合わせてください。',
+      '文字組アキ量設定について、いずれも同封された kumo.yakumono-typestyle を使用してください。',
+      '原則、PRIMARY で定めた書体を使用し、SECONDARY で定めた「Inter」及び「BIZ UDPGothic」は極力使用を避け、PRIMARY で定めた書体が使用できない場合のみに選択してください。',
+      'また、PRIMARY で定めた書体と SECONDARY で定めた書体は同一の文章及び同一の媒体で組み合わせて使用することを禁止します。',
+      'MONOSPACE で定めた書体は必ず独立させた文章として使用し、その他いかなる書体と組み合わせて文章を制作してはいけません。',
+    ];
+
+const webSub = (face: string) => (en ? `Web display: substituted with ${face}` : `Web表示: ${face}代替`);
+
+const enSpecimen = 'abcdefghijklmnopqrstuvwxyz|ABCDEFGHIJKLMNOPQRSTUVWXYZ|0123456789@¥$%!?.,:;(-)';
+---
+
+<section id="typography" class="section">
+  <SectionHeader page="07" title="Typography Style" sub={en ? 'Type system' : 'タイポグラフィ'}>
+    {lede.map((paragraph) => <p class:list={{ en }}>{paragraph}</p>)}
+  </SectionHeader>
+  <div class="type-list">
+    <div class="type-row">
+      <div>
+        <div class="type-role">EN [Headline]</div>
+        <div class="type-name">Monotype Helvetica Now Display</div>
+        <div class="type-sub">{webSub('Helvetica Neue')}</div>
+      </div>
+      <div class="specimen spec-display">
+        {enSpecimen.split('|').map((line, i) => <>{i > 0 && <br />}{line}</>)}
+      </div>
+    </div>
+    <div class="type-row">
+      <div>
+        <div class="type-role">EN [Body]</div>
+        <div class="type-name">Monotype Helvetica Now Text</div>
+        <div class="type-sub">{webSub('Helvetica Neue')}</div>
+      </div>
+      <div class="specimen spec-body">
+        {enSpecimen.split('|').map((line, i) => <>{i > 0 && <br />}{line}</>)}
+      </div>
+    </div>
+    <div class="type-row">
+      <div>
+        <div class="type-role">EN (Secondary)</div>
+        <div class="type-name">Inter</div>
+      </div>
+      <div class="specimen spec-secondary">
+        {enSpecimen.split('|').map((line, i) => <>{i > 0 && <br />}{line}</>)}
+      </div>
+    </div>
+    <div class="type-row">
+      <div>
+        <div class="type-role">JA (Primary)</div>
+        <div class="type-name">TP Tokyo City font</div>
+        <div class="type-sub">{webSub('BIZ UDPGothic')}</div>
+      </div>
+      <div class="specimen spec-ja">あアｱ亜。、</div>
+    </div>
+    <div class="type-row">
+      <div>
+        <div class="type-role">JA (Secondary)</div>
+        <div class="type-name">BIZ UDPGothic</div>
+      </div>
+      <div class="specimen spec-ja">あアｱ亜。、</div>
+    </div>
+    <div class="type-row">
+      <div>
+        <div class="type-role">Synthetic JA+EN (Primary)</div>
+        <div class="type-name">TP Tokyo City font + Monotype Helvetica Now Text</div>
+      </div>
+      <div class="specimen spec-synth-primary">abcdABCD01234 あ亜@¥$.;(-)。、</div>
+    </div>
+    <div class="type-row">
+      <div>
+        <div class="type-role">Synthetic JA+EN (Secondary)</div>
+        <div class="type-name">BIZ UDPGothic + Inter</div>
+      </div>
+      <div class="specimen spec-synth-secondary">abcdABCD01234 あ亜@¥$.;(-)。、</div>
+    </div>
+    <div class="type-row">
+      <div>
+        <div class="type-role">Monospace</div>
+        <div class="type-name">Gravitica Mono</div>
+        <div class="type-sub">{webSub('IBM Plex Mono')}</div>
+      </div>
+      <div class="specimen spec-mono">
+        {enSpecimen.split('|').map((line, i) => <>{i > 0 && <br />}{line}</>)}
+      </div>
+    </div>
+  </div>
+  <div class="note">
+    <span class="note-label">Type styles (v1.0)</span>
+    <div class="note-mono">
+      kumo.productions™ — Helvetica Now Display / Helvetica Now text<br />kumo.productions.type-style —
+      100%(PRIMARY・SECONDARY)<br />kumo.productions.type-style2 — 100%(SECONDARY)<br />kumo.yakumono-typestyle —
+      PRIMARY・SECONDARY(約物)
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+<!-- @dsCard group="Components" viewport="700x140" name="Navigation" subtitle="Tabs — underline style" -->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+<script>window.exports={};window.module={exports:window.exports};window.require=function(n){return ({react:window.React,'react-dom':window.ReactDOM})[n]||window.React;};</script>
+<style>body{margin:0;background:var(--surface-page)}</style><script>(function(){var f=new URLSearchParams(location.search).get('theme');if(f==='dark')document.documentElement.setAttribute('data-theme','dark');if(!f)window.addEventListener('message',function(e){if(e.data&&e.data.kumoTheme)document.documentElement.setAttribute('data-theme',e.data.kumoTheme==='dark'?'dark':'');});})();</script>
+</head><body>
+<div id="root"></div>
+<script type="text/babel" src="./Tabs.jsx"></script>
+<script type="text/babel">
+const { Tabs } = window.exports;
+function Demo(){
+  const [tab, setTab] = React.useState('Works');
+  return <div style={{padding:20, display:'flex', flexDirection:'column', gap:14}}>
+    <Tabs items={['Works','About','Process','Contact']} value={tab} onChange={setTab} />
+    <div style={{fontFamily:'var(--font-mono)', fontSize:11, color:'var(--text-secondary)'}}>selected: {tab}</div>
+    <Tabs size="sm" items={[{value:'a',label:'16:9'},{value:'b',label:'CINEMASCOPE'},{value:'c',label:'SPHERES',disabled:true}]} value="a" onChange={()=>{}} />
+  </div>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

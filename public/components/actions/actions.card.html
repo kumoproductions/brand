@@ -1,0 +1,42 @@
+<!-- @dsCard group="Components" viewport="700x250" name="Actions" subtitle="Button — 4 variants × 3 sizes / IconButton" -->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+<script>window.exports={};window.module={exports:window.exports};window.require=function(n){return ({react:window.React,'react-dom':window.ReactDOM})[n]||window.React;};</script>
+<style>body{margin:0;background:var(--surface-page)}</style><script>(function(){var f=new URLSearchParams(location.search).get('theme');if(f==='dark')document.documentElement.setAttribute('data-theme','dark');if(!f)window.addEventListener('message',function(e){if(e.data&&e.data.kumoTheme)document.documentElement.setAttribute('data-theme',e.data.kumoTheme==='dark'?'dark':'');});})();</script>
+</head><body>
+<div id="root"></div>
+<script type="text/babel" src="./Button.jsx"></script>
+<script type="text/babel" src="./IconButton.jsx"></script>
+<script type="text/babel">
+const { Button, IconButton } = window.exports;
+const Gear = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9l2.1 2.1m10 10 2.1 2.1m0-14.2-2.1 2.1m-10 10-2.1 2.1"/></svg>;
+const X = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18M6 6l12 12"/></svg>;
+function Demo(){
+  return <div style={{padding:20, display:'flex', flexDirection:'column', gap:16}}>
+    <div style={{display:'flex', gap:10, alignItems:'center', flexWrap:'wrap'}}>
+      <Button>Primary</Button>
+      <Button variant="secondary">Secondary</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="accent">Accent</Button>
+      <Button disabled>Disabled</Button>
+    </div>
+    <div style={{display:'flex', gap:10, alignItems:'center', flexWrap:'wrap'}}>
+      <Button size="sm">Small</Button>
+      <Button size="md">Medium</Button>
+      <Button size="lg">Large</Button>
+      <Button variant="secondary"><Gear/> With icon</Button>
+    </div>
+    <div style={{display:'flex', gap:10, alignItems:'center'}}>
+      <IconButton label="Settings"><Gear/></IconButton>
+      <IconButton label="Close" variant="outline"><X/></IconButton>
+      <IconButton label="Settings" size="sm"><Gear/></IconButton>
+      <IconButton label="Close" disabled><X/></IconButton>
+    </div>
+  </div>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>

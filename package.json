@@ -1,22 +1,55 @@
 {
-    "name": "@kumoproductions/branding",
-    "version": "1.0.0",
-    "description": "Official branding assets for kumo.productions™, including logos, typography, color variables, and Tailwind presets.",
-    "license": "Proprietary",
-    "author": "Tomoya Eguchi",
-    "homepage": "https://github.com/kumoproductions/branding",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/kumoproductions/branding.git"
-    },
-    "scripts": {
-        "build": "node scripts/svg-to-images.js",
-        "deploy": "node scripts/deploy-to-r2.js"
-    },
-    "devDependencies": {
-        "@aws-sdk/client-s3": "^3.490.0",
-        "@aws-sdk/credential-providers": "^3.490.0",
-        "dotenv": "^16.3.1",
-        "sharp": "^0.33.0"
-    }
+  "name": "@kumoproductions/branding",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Official branding assets and brand portal for kumo.productions™.",
+  "homepage": "https://github.com/kumoproductions/branding",
+  "license": "Proprietary",
+  "author": "Tomoya Eguchi",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kumoproductions/branding.git"
+  },
+  "scripts": {
+    "dev": "portless",
+    "dev:app": "astro dev",
+    "prebuild": "node scripts/collect-assets.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "deploy": "pnpm build && wrangler deploy",
+    "lint": "oxlint .",
+    "format": "oxfmt .",
+    "typecheck": "wrangler types worker/worker-configuration.d.ts && astro check && tsc -p worker",
+    "prepare": "lefthook install"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@resvg/resvg-wasm": "^2.6.2",
+    "astro": "^7.2.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "lefthook": "^2.1.10",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
+    "portless": "^0.15.5",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.124.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "lefthook",
+      "esbuild",
+      "workerd"
+    ]
+  },
+  "portless": {
+    "name": "brand.kumo",
+    "script": "dev:app"
+  }
 }

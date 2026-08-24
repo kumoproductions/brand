@@ -1,0 +1,76 @@
+---
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const rules = en
+  ? [
+      'This document sets out the minimum rules required to preserve the kumo.productions™ brand when using the logotype, together with reference examples of its use. Apart from the prohibitions explicitly defined here, treat all other general items as guidance, and apply them with appropriate judgment for the medium and situation. Should new media or technologies cause these rules to hinder the preservation or use of the brand, they will be revised promptly in consultation with the owner of this document.',
+      'Designers working with the brand under these guidelines should not feel constrained by the rules in this document — produce the graphics that best serve the final result.',
+    ]
+  : [
+      '本書は kumo.productions™ におけるロゴタイプの使用に際し、ブランディングを保持するための必要最低限の規定及び、使用に関する参考事例を記載するものであり、特別に定める禁止事項を除き、その他一般的な項目については参考程度に留め、使用媒体や状況に応じて適切に判断し使用するものとする。また、新しい媒体や技術により、本規定ではブランディングの保持や使用において障害が発生する場合、本書の責任者と協議の元、速やかにこれを改訂するものとする。',
+      '　本ガイドラインの元、ブランディングを使用するデザイン従事者各位は、本書に記載されたルールにとらわれず、仕上がりに応じグラフィックを制作してください。',
+    ];
+
+const toc = [
+  { id: 'overview', label: 'Overview', page: '01' },
+  { id: 'naming', label: 'Naming & Notation', page: '02' },
+  { id: 'sym-central', label: 'The kumo™ Symbol — CENTRAL', page: '03' },
+  { id: 'sym-systems', label: 'The kumo™ Symbol — Systems', page: '04' },
+  { id: 'sym-ng', label: 'The kumo™ Symbol — Incorrect Usage', page: '05' },
+  { id: 'logotype', label: 'The kumo™ Logotype', page: '06' },
+  { id: 'typography', label: 'Typography Style', page: '07' },
+  { id: 'logo-systems', label: 'Logo Systems', page: '08' },
+  { id: 'color', label: 'Color Style', page: '09' },
+  { id: 'combos', label: 'Color Combinations', page: '10' },
+  { id: 'examples', label: 'Usage Examples', page: '11' },
+  { id: 'ds-tokens', label: 'Design Tokens', page: '12' },
+  { id: 'ds-components', label: 'UI Components', page: '13' },
+];
+---
+
+<section id="overview" class="section no-rule">
+  <div class="meta-bar">
+    <span>kumo.productions™ Branding Standards</span>
+    <span>Version 1.0</span>
+  </div>
+  <div class="hero">
+    <img src="/assets/svg/symbol-central.svg" alt="The kumo™ Symbol CENTRAL" class="invert-on-dark" />
+    <div>
+      <h1 class="hero-title">kumo.productions™<br />Branding Standards</h1>
+      <dl class="hero-meta">
+        <div>
+          <dt>Created</dt>
+          <dd>December 24, 2024</dd>
+        </div>
+        <div>
+          <dt>Version</dt>
+          <dd>1.0</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+  <p class="block-label">General rules</p>
+  <div class="prose">
+    {rules.map((rule) => <p class:list={{ en }}>{rule}</p>)}
+    <p class="en">
+      kumo.productions™ is a video production company based in Tokyo. kumo™ specializes in motion graphics and 3D CGI,
+      and has been creating commercials, music videos, and live performances.
+    </p>
+  </div>
+  <p class="block-label">Contents</p>
+  <div class="toc">
+    {
+      toc.map((item) => (
+        <a class="toc-row" href={`#${item.id}`}>
+          <span>{item.label}</span>
+          <span class="toc-page">{item.page}</span>
+        </a>
+      ))
+    }
+  </div>
+</section>

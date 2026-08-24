@@ -1,0 +1,71 @@
+/* kumo.productions(TM) — Color Style (Branding Standards v1.0, P.12–14) */
+:root {
+  /* Base palette */
+  --kumo-base-white: #FFFFFF;
+  --kumo-cloud-white: #F7F7F7;
+  --kumo-cloudiness-gray: #6A6E71;
+  --kumo-space-black: #1E1E1E;
+  --kumo-base-black: #000000;
+  --kumo-sky-blue: #64ADD4;      /* Highlight */
+  --kumo-night-sky-blue: #1E4B6B;/* Highlight */
+
+  /* Semantic aliases */
+  --surface-page: var(--kumo-base-white);
+  --surface-card: var(--kumo-base-white);
+  --surface-sunken: var(--kumo-cloud-white);
+  --surface-inverse: var(--kumo-space-black);
+  --text-primary: var(--kumo-base-black);
+  --text-secondary: var(--kumo-cloudiness-gray);
+  --text-inverse: var(--kumo-base-white);
+  --text-on-accent: var(--kumo-base-white);
+  --accent: var(--kumo-night-sky-blue);
+  --accent-soft: var(--kumo-sky-blue);
+  --accent-soft-bg: rgba(100, 173, 212, 0.14);
+  --border-default: #E9EAEB; /* hairline — Cloudiness gray ~12% on white */
+  --border-strong: #C9CCCE;
+  --focus-ring: rgba(100, 173, 212, 0.55);
+  --scrim: rgba(30, 30, 30, 0.5);
+
+  /* Intentional additions (UI necessity — not in brand palette; keep usage minimal) */
+  --danger: oklch(0.5 0.13 25);
+  --danger-bg: oklch(0.97 0.018 25);
+  --success: oklch(0.55 0.1 155);
+  --success-bg: oklch(0.97 0.02 155);
+  --warning: oklch(0.58 0.12 80);
+  --warning-bg: oklch(0.97 0.03 85);
+
+  /* Solid interactive surfaces (Button primary, Switch, checked states…) — flip in dark mode */
+  --solid: var(--kumo-base-black);
+  --solid-hover: var(--kumo-space-black);
+  --on-solid: var(--kumo-base-white);
+  --accent-hover: #16405C;
+}
+
+/* Dark mode — opt in with <html data-theme="dark"> */
+[data-theme="dark"] {
+  --surface-page: var(--kumo-space-black);
+  --surface-card: var(--kumo-space-black);
+  --surface-sunken: var(--kumo-base-black);
+  --surface-inverse: var(--kumo-base-white);
+  --text-primary: var(--kumo-base-white);
+  --text-secondary: #9BA0A3; /* Cloudiness gray lightened for dark */
+  --text-inverse: var(--kumo-base-black);
+  --text-on-accent: var(--kumo-space-black);
+  --accent: var(--kumo-sky-blue); /* Night sky blue lacks contrast on black (NG combo) */
+  --accent-soft: var(--kumo-sky-blue);
+  --accent-soft-bg: rgba(100, 173, 212, 0.16);
+  --accent-hover: #8EC6E2;
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.3);
+  --focus-ring: rgba(100, 173, 212, 0.55);
+  --scrim: rgba(0, 0, 0, 0.6);
+  --danger: oklch(0.72 0.12 25);
+  --danger-bg: oklch(0.3 0.06 25);
+  --success: oklch(0.75 0.09 155);
+  --success-bg: oklch(0.3 0.05 155);
+  --warning: oklch(0.78 0.11 85);
+  --warning-bg: oklch(0.32 0.06 85);
+  --solid: var(--kumo-base-white);
+  --solid-hover: var(--kumo-cloud-white);
+  --on-solid: var(--kumo-base-black);
+}

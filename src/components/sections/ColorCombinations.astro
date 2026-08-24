@@ -1,0 +1,67 @@
+---
+import Figure from '../Figure.astro';
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const t = en
+  ? {
+      sub: 'Color pairings',
+      lede: 'These are pairing examples within the kumo.productions™ color system.',
+      capOk1: 'Basic pairings built around different base colors. Use these by default unless there is a specific intent.',
+      capOk2:
+        'Special pairings using the highlight colors. Use these when you specifically want to attract attention or guide the eye.',
+      ngLabel: 'Incorrect usage',
+      ngProse:
+        'These are prohibitions and cautions within the kumo.productions™ color system, defined to avoid unintentionally damaging the identity. Beyond the examples below, any treatment that significantly damages the brand identity is prohibited.',
+      capNg1: 'Do not pair colors that belong to the same group.',
+      capNg2: 'Using a highlight color as a background is prohibited.',
+      capNg3: 'When Cloudiness gray is the background, do not combine it with the highlights.',
+      capNg4:
+        'Even across different groups, pairing colors of similar tone can create unintended impressions — use with caution.',
+    }
+  : {
+      sub: '配色',
+      lede: 'これらは kumo.productions™ におけるカラーシステムにおいて、組み合わせの例を記載したものです。',
+      capOk1: '異なるベースカラーを中心とした基本の組み合わせです。特別な意図がない場合は基本これを使用してください。',
+      capOk2: 'ハイライトカラーを使用した特殊な組み合わせです。特段誘導し目立たせたい意図がある場合、これを使用してください。',
+      ngLabel: 'Incorrect usage / 禁止配色',
+      ngProse:
+        'これらは kumo.productions™ におけるカラーシステム上において、意図せずアイデンティティを損なわないよう禁止・注意する事項です。下記に定める例の他、著しくブランディングアイデンティティを損なう処理を行うことを禁止します。',
+      capNg1: '同じグループに属するカラー同士を組み合わせないでください。',
+      capNg2: 'ハイライトカラーを下地に使用することを禁止します。',
+      capNg3: 'Cloudiness gray を下地に使用した際、ハイライトと組み合わせないでください。',
+      capNg4: '異なるグループであってもトーンが近い色同士での組み合わせの使用は意図しない印象を与える可能性に注意してください。',
+    };
+---
+
+<section id="combos" class="section">
+  <SectionHeader kicker="Color Style Guidelines" page="10" title="Color Combinations" sub={t.sub}>
+    <p class:list={{ en }}>{t.lede}</p>
+  </SectionHeader>
+  <div class="fig-grid cols-2" style="--plate-h: 240px;">
+    <Figure src="/fig-svg/combos-ok-mono.svg" alt="Approved monochrome combinations" num="1." ja={t.capOk1} />
+    <Figure src="/fig-svg/combos-ok-hl.svg" alt="Approved highlight combinations" num="2." ja={t.capOk2} />
+  </div>
+  <p class="block-label">{t.ngLabel}</p>
+  <div class="prose">
+    <p class:list={{ en }}>{t.ngProse}</p>
+  </div>
+  <div class="fig-grid cols-2" style="--plate-h: 160px;">
+    <Figure src="/fig-svg/combos-ng-1.svg" alt="Incorrect: low contrast tone on tone" num="1." ja={t.capNg1} />
+    <Figure src="/fig-svg/combos-ng-2.svg" alt="Incorrect: on highlight backgrounds" num="2." ja={t.capNg2} />
+    <Figure
+      src="/fig-svg/combos-ng-3.svg"
+      alt="Incorrect: highlight colors on Cloudiness gray"
+      num="3."
+      mono="Cloudiness gray"
+      ja={t.capNg3}
+    />
+    <Figure src="/fig-svg/combos-ng-4.svg" alt="Incorrect: low contrast highlight pairings" num="4." ja={t.capNg4} />
+  </div>
+</section>

@@ -1,0 +1,52 @@
+---
+import Figure from '../Figure.astro';
+import SectionHeader from '../SectionHeader.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const t = en
+  ? {
+      sub: 'Prohibited examples',
+      lede: 'Never deform or distort the symbol beyond its prescribed proportions. Beyond the examples below, any treatment that significantly damages the brand identity is prohibited.',
+      cap1: 'Do not use fills that blend into the background and significantly impair recognition of the shape. Temporary states within video footage are exempt.',
+      cap2: 'Do not render the symbol as outlines.',
+      cap3: 'Do not add cast shadows extending from the symbol or render it partially outlined.',
+      cap4: 'Do not deform or distort beyond the prescribed proportions. When displayed on a three-dimensional object, this is acceptable only if the treatment does not significantly impair recognition of the shape.',
+      cap5: 'Do not place the symbol at any angle other than horizontal or perpendicular relative to the medium.',
+      cap6: 'Do not use multiple colors across the individual spheres of a single identity.',
+    }
+  : {
+      sub: '使用禁止例',
+      lede: 'ロゴシンボルは如何なる場合においても規定の比率を逸脱した変形や歪曲をしてはならず、下記に定める例の他、著しくブランディングアイデンティティを損なう処理を行うことを禁止します。',
+      cap1: '背景色と同化した素材を使用した、形状の認識を著しく損なう処理をしてはなりません。ただし、映像素材による一時的なものはこれを適応しません。',
+      cap2: 'アウトライン化された形で表現してはいけません。',
+      cap3: '自敬から影が伸びたり、部分的にアウトライン化された形状で表現してはいけません。',
+      cap4: '規定の比率を逸脱した変形、歪曲をしてはなりません。ただし、立体オブジェクト上に表示する場合、形状の認識を著しく損なう処理でなければこれを適応してはいけません。',
+      cap5: '媒体を基準に水平、直角以外での配置をしてはいけません。',
+      cap6: '同一のアイデンティティ上の個別のスフィアで複数の色を使用してはいけません。',
+    };
+---
+
+<section id="sym-ng" class="section">
+  <SectionHeader
+    kicker="The kumo.productions™ Symbol Guidelines"
+    page="05"
+    title="The kumo™ Symbol — Incorrect Usage"
+    sub={t.sub}
+  >
+    <p class:list={{ en }}>{t.lede}</p>
+  </SectionHeader>
+  <div class="fig-grid cols-3" style="--plate-h: 230px;">
+    <Figure src="/fig-svg/ng-1.svg" alt="Incorrect: replaced particle shapes" num="1." ja={t.cap1} />
+    <Figure src="/fig-svg/ng-2.svg" alt="Incorrect: outlined" num="2." ja={t.cap2} />
+    <Figure src="/fig-svg/ng-3.svg" alt="Incorrect: rotated particles" num="3." ja={t.cap3} />
+    <Figure src="/fig-svg/ng-4.svg" alt="Incorrect: skewed" num="4." ja={t.cap4} />
+    <Figure src="/fig-svg/ng-5.svg" alt="Incorrect: irregular shapes" num="5." ja={t.cap5} />
+    <Figure src="/fig-svg/ng-6.svg" alt="Incorrect: off-palette colors" num="6." ja={t.cap6} />
+  </div>
+</section>

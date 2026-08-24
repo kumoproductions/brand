@@ -1,0 +1,48 @@
+---
+import ColorCombinations from './sections/ColorCombinations.astro';
+import ColorStyle from './sections/ColorStyle.astro';
+import DesignTokens from './sections/DesignTokens.astro';
+import Examples from './sections/Examples.astro';
+import LogoSystems from './sections/LogoSystems.astro';
+import Logotype from './sections/Logotype.astro';
+import Naming from './sections/Naming.astro';
+import Overview from './sections/Overview.astro';
+import SymbolCentral from './sections/SymbolCentral.astro';
+import SymbolIncorrect from './sections/SymbolIncorrect.astro';
+import SymbolSystems from './sections/SymbolSystems.astro';
+import Typography from './sections/Typography.astro';
+import UiComponents from './sections/UiComponents.astro';
+import Layout from '../layouts/Layout.astro';
+import Sidebar from './Sidebar.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+---
+
+<Layout lang={lang}>
+  <Sidebar lang={lang} />
+  <main class="main">
+    <div class="container">
+      <Overview lang={lang} />
+      <Naming lang={lang} />
+      <SymbolCentral lang={lang} />
+      <SymbolSystems lang={lang} />
+      <SymbolIncorrect lang={lang} />
+      <Logotype lang={lang} />
+      <Typography lang={lang} />
+      <LogoSystems lang={lang} />
+      <ColorStyle lang={lang} />
+      <ColorCombinations lang={lang} />
+      <Examples lang={lang} />
+      <DesignTokens lang={lang} />
+      <UiComponents lang={lang} />
+      <footer class="footer">
+        <img src="/assets/svg/logotype-microspace-tm.svg" alt="kumo.productions™" class="invert-on-dark" />
+        <span class="footer-note">Branding Standards v1.0 — December 24, 2024</span>
+      </footer>
+    </div>
+  </main>
+</Layout>

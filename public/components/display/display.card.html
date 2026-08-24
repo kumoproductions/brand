@@ -1,0 +1,54 @@
+<!-- @dsCard group="Components" viewport="700x400" name="Display" subtitle="Card / Badge / Tag / KumoLogo" -->
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+<script>window.exports={};window.module={exports:window.exports};window.require=function(n){return ({react:window.React,'react-dom':window.ReactDOM})[n]||window.React;};</script>
+<style>body{margin:0;background:var(--surface-sunken)}</style><script>(function(){var f=new URLSearchParams(location.search).get('theme');if(f==='dark')document.documentElement.setAttribute('data-theme','dark');if(!f)window.addEventListener('message',function(e){if(e.data&&e.data.kumoTheme)document.documentElement.setAttribute('data-theme',e.data.kumoTheme==='dark'?'dark':'');});})();</script>
+</head><body>
+<div id="root"></div>
+<script type="text/babel" src="./Card.jsx"></script>
+<script type="text/babel" src="./Badge.jsx"></script>
+<script type="text/babel" src="./Tag.jsx"></script>
+<script type="text/babel" src="./KumoLogo.jsx"></script>
+<script type="text/babel">
+const { Card, Badge, Tag, KumoLogo } = window.exports;
+function Demo(){
+  const [sel, setSel] = React.useState(['Motion']);
+  const toggle = t => setSel(s => s.includes(t) ? s.filter(x=>x!==t) : [...s, t]);
+  return <div style={{padding:20, display:'flex', flexDirection:'column', gap:16}}>
+    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
+      <Card title="Render queue" meta="C24015" footer="Updated 5 min ago">
+        <div style={{fontSize:13, color:'var(--text-secondary)', lineHeight:1.6}}>delivery_v3.mov — 00:00:30<br/>4K ProRes 422 HQ</div>
+      </Card>
+      <Card inverse title="On-screen" meta="16:9">
+        <KumoLogo variant="primary-tm" height={14} inverse basePath="../../" />
+      </Card>
+    </div>
+    <div style={{display:'flex', gap:8, alignItems:'center', flexWrap:'wrap'}}>
+      <Badge>Draft</Badge>
+      <Badge tone="accent">In production</Badge>
+      <Badge tone="sky">Review</Badge>
+      <Badge tone="inverse">Delivered</Badge>
+      <Badge tone="success">Delivered OK</Badge>
+      <Badge tone="warning">Needs review</Badge>
+      <Badge tone="danger">Overdue</Badge>
+      <Badge mono tone="outline">P.03</Badge>
+      <Badge mono>v1.0</Badge>
+    </div>
+    <div style={{display:'flex', gap:8, alignItems:'center', flexWrap:'wrap'}}>
+      {['Motion','3DCG','Live','MV'].map(t => <Tag key={t} selected={sel.includes(t)} onClick={()=>toggle(t)}>{t}</Tag>)}
+      <Tag onRemove={()=>{}}>Removable</Tag>
+    </div>
+    <div style={{display:'flex', gap:24, alignItems:'center', flexWrap:'wrap', background:'#fff', border:'1px solid var(--border-default)', borderRadius:10, padding:16}}>
+      <KumoLogo variant="symbol" height={56} basePath="../../" />
+      <KumoLogo variant="primary-tm" height={16} basePath="../../" />
+      <KumoLogo variant="secondary-tm" height={30} basePath="../../" />
+      <KumoLogo variant="abbreviation-tm" height={30} basePath="../../" />
+    </div>
+  </div>;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body></html>
