@@ -20,6 +20,9 @@
     ".turbo",
     ".vercel",
     "out",
-    "pnpm-lock.yaml"
+    "pnpm-lock.yaml",
+    ".design-sync",
+    ".ds-sync",
+    "ds-bundle"
   ]
 }

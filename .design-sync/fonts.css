@@ -1,0 +1,33 @@
+/* design-sync copy of public/fonts.css with urls made relative so the
+   converter can resolve and copy the woff2 files into the bundle's fonts/.
+   (public/fonts.css uses site-absolute /fonts/ urls the converter can't map.)
+   Keep in sync with public/fonts.css. PP Object Sans is the logotype face
+   only — never headings or running text. */
+@font-face {
+  font-family: "Inter";
+  src: url("../public/fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Object Sans";
+  src: url("../public/fonts/PPObjectSans-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Object Sans";
+  src: url("../public/fonts/PPObjectSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Object Sans";
+  src: url("../public/fonts/PPObjectSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

@@ -1,0 +1,12 @@
+/* kumo.productions(TM) design-system base — the page-level defaults every
+   design built with this DS starts from (mirrors the component demo cards).
+   Tokens live in tokens/*.css; components style themselves inline via
+   var(--*) so this file stays minimal on purpose. */
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}

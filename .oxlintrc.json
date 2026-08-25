@@ -35,6 +35,9 @@
     ".vercel",
     "out",
     "coverage",
-    "**/*.astro"
+    "**/*.astro",
+    ".design-sync",
+    ".ds-sync",
+    "ds-bundle"
   ]
 }

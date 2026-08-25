@@ -1,0 +1,36 @@
+{
+  "projectId": "d42e43fe-c257-4e6a-a100-d34b23d129d1",
+  "shape": "package",
+  "pkg": "@kumoproductions/branding",
+  "globalName": "KumoBrand",
+  "srcDir": "public/components",
+  "tokensPkg": "../..",
+  "tokensGlob": "public/tokens/*.css",
+  "cssEntry": ".design-sync/base.css",
+  "extraFonts": [".design-sync/fonts.css"],
+  "guidelinesGlob": ["brand-guidelines.md"],
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "Dialog": { "cardMode": "single", "viewport": "640x420" },
+    "Badge": { "cardMode": "column" },
+    "Card": { "cardMode": "column" }
+  },
+  "dtsPropsFor": {
+    "Button": "variant?: 'primary' | 'secondary' | 'ghost' | 'accent'; size?: 'sm' | 'md' | 'lg'; disabled?: boolean; fullWidth?: boolean; type?: 'button' | 'submit' | 'reset'; onClick?: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode;",
+    "ArrowButton": "label?: string; size?: 'sm' | 'md' | 'lg'; reverse?: boolean; external?: boolean; disabled?: boolean; type?: 'button' | 'submit' | 'reset'; onClick?: React.MouseEventHandler<HTMLButtonElement>; ariaLabel?: string;",
+    "IconButton": "label: string; variant?: 'ghost' | 'outline'; size?: 'sm' | 'md' | 'lg'; disabled?: boolean; onClick?: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode;",
+    "Badge": "tone?: 'neutral' | 'outline' | 'inverse' | 'accent' | 'sky' | 'danger' | 'success' | 'warning'; mono?: boolean; children?: React.ReactNode;",
+    "Tag": "selected?: boolean; onClick?: () => void; onRemove?: () => void; disabled?: boolean; children?: React.ReactNode;",
+    "Card": "title?: React.ReactNode; meta?: React.ReactNode; footer?: React.ReactNode; padding?: string; inverse?: boolean; children?: React.ReactNode; style?: React.CSSProperties;",
+    "KumoLogo": "variant?: 'symbol' | 'primary' | 'primary-tm' | 'secondary' | 'secondary-tm' | 'tertiary' | 'tertiary-tm' | 'abbreviation' | 'abbreviation-tm' | 'microspace' | 'microspace-tm'; height?: number; inverse?: boolean; basePath?: string; style?: React.CSSProperties;",
+    "Input": "value?: string; onChange?: React.ChangeEventHandler<HTMLInputElement>; placeholder?: string; type?: string; size?: 'sm' | 'md' | 'lg'; invalid?: boolean; disabled?: boolean; name?: string; style?: React.CSSProperties;",
+    "Select": "value?: string; onChange?: React.ChangeEventHandler<HTMLSelectElement>; options?: Array<string | { value: string; label: string }>; placeholder?: string; size?: 'sm' | 'md' | 'lg'; invalid?: boolean; disabled?: boolean; name?: string; style?: React.CSSProperties;",
+    "Checkbox": "checked?: boolean; onChange?: (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void; label?: React.ReactNode; disabled?: boolean; name?: string;",
+    "Radio": "checked?: boolean; onChange?: (value: string, event: React.ChangeEvent<HTMLInputElement>) => void; label?: React.ReactNode; name?: string; value?: string; disabled?: boolean;",
+    "Switch": "checked?: boolean; onChange?: (checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => void; label?: React.ReactNode; disabled?: boolean; name?: string;",
+    "Dialog": "open?: boolean; title?: React.ReactNode; meta?: React.ReactNode; onClose?: () => void; footer?: React.ReactNode; width?: number | string; children?: React.ReactNode;",
+    "Toast": "open?: boolean; tone?: 'inverse' | 'light'; title?: React.ReactNode; description?: React.ReactNode; onClose?: () => void; action?: React.ReactNode;",
+    "Tooltip": "content: React.ReactNode; side?: 'top' | 'bottom' | 'left' | 'right'; children: React.ReactNode;",
+    "Tabs": "items?: Array<string | { value: string; label: React.ReactNode; disabled?: boolean }>; value?: string; onChange?: (value: string) => void; size?: 'sm' | 'md';"
+  }
+}
