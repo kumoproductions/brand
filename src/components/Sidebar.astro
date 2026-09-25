@@ -1,10 +1,17 @@
 ---
 interface Props {
   lang?: 'ja' | 'en';
+  /** Page the section anchors live on; tool pages link back to the guideline. */
+  root?: string;
+  tool?: 'generator';
 }
 
-const { lang = 'ja' } = Astro.props;
+const { lang = 'ja', root = '', tool } = Astro.props;
 const en = lang === 'en';
+
+// The language switch keeps the current page: /en/<path> ↔ /<path>.
+const jaPath = Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
+const altHref = en ? jaPath : `/en${jaPath === '/' ? '/' : jaPath}`;
 
 const nav = [
   { id: 'overview', en: 'Overview', ja: '概要・基本情報', sub: 'Basics' },
@@ -21,11 +28,21 @@ const nav = [
   { id: 'ds-tokens', en: 'Design Tokens', ja: '拡張 — CSSトークン', sub: 'Extension — CSS tokens' },
   { id: 'ds-components', en: 'UI Components', ja: '拡張 — 実動UIセット', sub: 'Extension — live UI set' },
 ];
+
+const tools = [
+  {
+    id: 'generator',
+    href: en ? '/en/generator' : '/generator',
+    en: 'Sphere Generator',
+    ja: 'スフィア・ジェネレーター',
+    sub: 'Particle SVG tool',
+  },
+];
 ---
 
 <aside class="sidebar">
   <div class="sidebar-brand">
-    <a href="#overview" aria-label={en ? 'Back to top' : 'トップへ'}>
+    <a href={`${root}#overview`} aria-label={en ? 'Back to top' : 'トップへ'}>
       <img src="/assets/svg/logotype-microspace-tm.svg" alt="kumo.productions™" class="invert-on-dark" />
     </a>
     <span class="brand-note">Branding Standards v1.0</span>
@@ -33,8 +50,19 @@ const nav = [
   <nav class="side-nav" aria-label={en ? 'Table of contents' : '目次'}>
     {
       nav.map((item, i) => (
-        <a class="nav-link" href={`#${item.id}`}>
+        <a class="nav-link" href={`${root}#${item.id}`}>
           <span class="nav-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="nav-en">{item.en}</span>
+          <span class="nav-ja">{en ? item.sub : item.ja}</span>
+        </a>
+      ))
+    }
+  </nav>
+  <nav class="side-nav side-tools" aria-label={en ? 'Tools' : 'ツール'}>
+    {
+      tools.map((item) => (
+        <a class:list={['nav-link', { 'is-active': tool === item.id }]} href={item.href}>
+          <span class="nav-num">T</span>
           <span class="nav-en">{item.en}</span>
           <span class="nav-ja">{en ? item.sub : item.ja}</span>
         </a>
@@ -52,7 +80,7 @@ const nav = [
       >
         Light
       </button>
-      <a class="chip-btn lang-switch" href={en ? '/' : '/en/'} aria-label={en ? '日本語版に切り替え' : 'Switch to English'}>
+      <a class="chip-btn lang-switch" href={altHref} aria-label={en ? '日本語版に切り替え' : 'Switch to English'}>
         {en ? 'JA 日本語' : 'EN English'}
       </a>
     </div>

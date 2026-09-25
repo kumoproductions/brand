@@ -1,0 +1,402 @@
+---
+// Sphere generator: an editor over src/utils/particles in two steps. Step 1
+// (light) composes spheres by diameter and shades them from a point or
+// directional light; step 2 (detail) edits the resulting particles cell by
+// cell. Both apply connection rules 5 and 6 and emit the SVG on the fly. The
+// state lives in the URL hash, so a layout is a link. Logic:
+// src/scripts/generator/.
+import SectionHeader from './SectionHeader.astro';
+import {
+  MAX_DIAMETER,
+  MAX_RANGE,
+  MAX_SIZE,
+  MIN_DIAMETER,
+  MIN_RANGE,
+  PRESETS,
+} from '../utils/particles';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+
+const FILLS = [
+  { value: '#ffffff', label: 'Base white #FFFFFF' },
+  { value: '#f7f7f7', label: 'Cloud white #F7F7F7' },
+  { value: '#6a6e71', label: 'Cloudiness gray #6A6E71' },
+  { value: '#1e1e1e', label: 'Space black #1E1E1E' },
+  { value: '#000000', label: 'Base black #000000' },
+  { value: '#64add4', label: 'Sky blue #64ADD4' },
+  { value: '#1e4b6b', label: 'Night sky blue #1E4B6B' },
+];
+
+// Base palette only: highlight colors are prohibited as backgrounds.
+const BACKGROUNDS = [
+  { value: '', label: en ? 'None (transparent)' : 'なし（透過）' },
+  { value: '#ffffff', label: 'Base white #FFFFFF' },
+  { value: '#f7f7f7', label: 'Cloud white #F7F7F7' },
+  { value: '#1e1e1e', label: 'Space black #1E1E1E' },
+  { value: '#000000', label: 'Base black #000000' },
+];
+
+const PNG_WIDTHS = [256, 512, 1024, 2048, 4096];
+const QUICK_DIAMETERS = [3, 5, 7, 9, 11, 13, 15];
+const diameters = Array.from(
+  { length: (MAX_DIAMETER - MIN_DIAMETER) / 2 + 1 },
+  (_, k) => MIN_DIAMETER + 2 * k
+);
+const sizes = Array.from({ length: MAX_SIZE }, (_, k) => k + 1);
+
+const t = en
+  ? {
+      sub: 'Sphere generator',
+      lede: [
+        'The construction system in 04 — particle sizes, corner radii, the 1.5a connection fillet, connection rules 5 and 6, and the composition rules — implemented as a generator in two steps. Step 1: choose sphere diameters and a light — a point light or a directional one at infinity — and the particle sizes and connections on the prescribed grid follow; the SVG is generated on the spot. Shading is either generated from the light — by distance from a point light, by direction from a directional one — or taken from the four defined spheres, turned to face the light.',
+        'Step 2 edits the result in detail: paint particles cell by cell, stamp the four defined spheres or the CENTRAL base composition, and transform the whole pattern. Connections are derived from rule 5; only a particle on the outer edge may drop one under rule 6. The layout is encoded in the page URL, so it can be shared as a link.',
+      ],
+      stage: 'Canvas',
+      legendLight:
+        'Click a diameter to add a sphere. Drag spheres to move them and drag ☀ to move the light: a point light sizes every particle by its distance (largest at “Range”), a directional light shades by direction and turns around the spheres. The dashed frame is the export box. ● connected · ○ cut (rule 6) — click a joint to toggle it. Wheel zooms; drag the empty area, Alt-drag, or middle-drag to pan.',
+      legendManual:
+        'The grid is unbounded: left click paints with the selected size anywhere, right click erases, and the dashed export box follows the particles. ● connected · ○ cut (rule 6) — click a joint to toggle it. Wheel zooms; Alt-drag or middle-drag pans.',
+      zoomIn: 'Zoom in',
+      zoomOut: 'Zoom out',
+      zoomFit: 'Fit',
+      steps: 'Workflow',
+      stepLight: '1 Light',
+      stepDetail: '2 Detail',
+      undo: 'Undo',
+      addSphere: 'Add sphere (diameter in cells)',
+      selectedSphere: 'Selected sphere',
+      sphereSize: 'Diameter',
+      removeSphere: 'Remove',
+      light: 'Light',
+      lightPoint: 'Point',
+      lightDirectional: 'Directional (infinite)',
+      azimuth: 'Direction',
+      strength: 'Strength',
+      contrast: 'Contrast',
+      range: 'Range (cells)',
+      shading: 'Shading',
+      shadingGen: 'Generated from light',
+      shadingCanon: 'Guideline patterns',
+      toDetail: 'Continue to 2 Detail →',
+      toLight: '← Back to 1 Light',
+      clear: 'Clear',
+      tools: 'Paint size',
+      erase: 'Erase',
+      stamp: 'Stamp',
+      orientation: 'Stamp orientation',
+      rotate: 'Rotate 90°',
+      mirror: 'Mirror',
+      transform: 'Whole pattern',
+      fill: 'Fill',
+      background: 'Background',
+      sizes: 'Show sizes',
+      output: 'Output',
+      copySvg: 'Copy SVG',
+      downloadSvg: 'SVG ↓',
+      png: 'PNG ↓',
+      pngWidth: 'PNG width',
+      notation: 'Notation',
+      copyLink: 'Copy link',
+      checks: 'Checks',
+      client: {
+        stats: 'Particles {p} · Connections {c} · Rule-6 cuts {x}',
+        spheres: 'Spheres: {list}',
+        sphereItem: '{label} ({orientation}) at {i},{j}',
+        noSpheres: 'No canonical sphere pattern found.',
+        noSpheresLight: 'No spheres yet — click a diameter to add one.',
+        asIs: 'as is',
+        mirrored: 'mirrored',
+        ok: 'Complies with composition rules 1–6.',
+        lightInfo:
+          'Light step: the shading is generated from the light and differs from the guideline patterns. Switch to “Guideline patterns” to use the four defined spheres turned to face the light.',
+        duplicates:
+          'The same sphere size appears more than once (composition rule 2): {list}',
+        custom:
+          '{n} particle(s) do not belong to any of the four defined spheres — pattern, proportions and tone are the identity.',
+        lattices:
+          'Two diagonal lattices are in use. Spheres that touch must share their diagonals (composition rule 5); spheres standing apart may differ, as in CENTRAL.',
+        overlaps:
+          '{n} overlapping pair(s) that rule 5 does not connect (a 7 diagonal to a 2).',
+        badNotation: 'Cannot read the notation: {msg}',
+        badPlace:
+          'A particle cannot share an edge with another — cells are only ever diagonal neighbours.',
+        conflict:
+          'That position overlaps another sphere or puts particles on a shared edge.',
+      },
+    }
+  : {
+      sub: 'スフィア・ジェネレーター',
+      lede: [
+        '04 構成システムの規定 — パーティクルの寸法、角丸、接続部 1.5a の角丸、接続規則 5・6、構成規定 — を 2 段階のジェネレーターとして実装しています。ステップ 1 では、スフィアの直径と光源（点光源、または無限遠の平行光）を決めるだけで、規定グリッド上のパーティクルの大きさと接続が求まり、SVG をその場で生成します。濃淡は光源から生成する（点光源では各パーティクルの光源からの距離、平行光では方向で決まります）か、規定 4 球のパターンを光源の向きに合わせて使用するかを選べます。',
+        'ステップ 2 では結果を詳細に編集します。パーティクルをマス単位で描画し、規定の 4 球と基準形 CENTRAL をスタンプし、全体を変形できます。接続は規則 5 により自動で判定され、外周に位置するパーティクルのみ規則 6 の例外として切り離せます。配置は URL に符号化されるため、リンクとして共有できます。',
+      ],
+      stage: 'キャンバス',
+      legendLight:
+        '直径をクリックしてスフィアを追加。スフィアはドラッグで移動、☀ をドラッグで光源を移動。点光源では各パーティクルの大きさが光源からの距離で決まり（「範囲」の距離で最大）、平行光では方向で決まります（マーカーはスフィアの周りを回ります）。点線の枠が SVG の書き出し範囲です。● 接続 · ○ 切り離し（規則 6）— マーカーをクリックで切替。ホイールでズーム、余白のドラッグ / Alt+ドラッグ / 中ボタンドラッグでパン。',
+      legendManual:
+        'グリッドは無限です。左クリックで選択中の大きさをどこにでも描画、右クリックで消去。点線の書き出し範囲はパーティクルに合わせて自動で追従します。● 接続 · ○ 切り離し（規則 6）— マーカーをクリックで切替。ホイールでズーム、Alt+ドラッグ / 中ボタンドラッグでパン。',
+      zoomIn: '拡大',
+      zoomOut: '縮小',
+      zoomFit: '全体表示',
+      steps: 'ワークフロー',
+      stepLight: '1 光源',
+      stepDetail: '2 詳細編集',
+      undo: '元に戻す',
+      addSphere: 'スフィアを追加（直径・マス）',
+      selectedSphere: '選択中のスフィア',
+      sphereSize: '直径',
+      removeSphere: '削除',
+      light: '光源',
+      lightPoint: '点光源',
+      lightDirectional: '平行光（無限遠）',
+      azimuth: '方向',
+      strength: '強さ',
+      contrast: 'コントラスト',
+      range: '範囲（マス）',
+      shading: '濃淡',
+      shadingGen: '光源から生成',
+      shadingCanon: '規定パターン',
+      toDetail: '2 詳細編集へ →',
+      toLight: '← 1 光源へ戻る',
+      clear: 'クリア',
+      tools: 'パーティクルの大きさ',
+      erase: '消去',
+      stamp: 'スタンプ',
+      orientation: 'スタンプの向き',
+      rotate: '90° 回転',
+      mirror: '左右反転',
+      transform: '全体',
+      fill: '塗り',
+      background: '背景',
+      sizes: '大きさを表示',
+      output: '出力',
+      copySvg: 'Copy SVG',
+      downloadSvg: 'SVG ↓',
+      png: 'PNG ↓',
+      pngWidth: 'PNG 幅',
+      notation: '表記',
+      copyLink: 'リンクをコピー',
+      checks: 'チェック',
+      client: {
+        stats: 'パーティクル {p} · 接続 {c} · 規則 6 のカット {x}',
+        spheres: 'スフィア: {list}',
+        sphereItem: '{label}（{orientation}）@ {i},{j}',
+        noSpheres: '規定の 4 種のスフィアに一致するパターンはありません。',
+        noSpheresLight: 'スフィアがありません。直径をクリックして追加してください。',
+        asIs: 'そのまま',
+        mirrored: '反転',
+        ok: '構成規定 1–6 に適合しています。',
+        lightInfo:
+          '光源ステップ: 濃淡は光源から生成しており、規定パターンとは異なります。「規定パターン」に切り替えると、規定 4 球の濃淡を光源の向きに合わせて使用します。',
+        duplicates:
+          '同じ大きさのスフィアが複数配置されています（構成規定 2）: {list}',
+        custom:
+          '規定の 4 種のスフィアに属さないパーティクルが {n} 個あります。パターン・比率・濃淡がアイデンティティです。',
+        lattices:
+          '対角格子が 2 系統あります。接するスフィア同士は必ず格子を揃えてください（構成規定 5）。離れたスフィア間は基準形 CENTRAL と同様に異なっていて構いません。',
+        overlaps:
+          '接続規則 5 を満たさないのに重なるパーティクルの組が {n} 組あります（7 と 2 の斜め隣接）。',
+        badNotation: '表記を解釈できません: {msg}',
+        badPlace:
+          '辺を共有する位置にはパーティクルを置けません。マスは必ず対角線上に隣接させます。',
+        conflict:
+          'その位置では他のスフィアと重なるか、パーティクルが辺を共有します。',
+      },
+    };
+---
+
+<section id="generator" class="section tool">
+  <SectionHeader
+    kicker="The kumo.productions™ Symbol Guidelines"
+    page="TOOL"
+    title="Sphere Generator"
+    sub={t.sub}
+  >
+    {t.lede.map((paragraph) => <p class:list={{ en }}>{paragraph}</p>)}
+  </SectionHeader>
+
+  <div class="gen-layout">
+    <div class="gen-stage">
+      <p class="block-label">{t.stage}</p>
+      <div class="gen-plate" id="gen-plate">
+        <svg id="gen-canvas" class="gen-canvas" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="gen-row gen-zoom">
+        <button class="chip-btn" type="button" data-zoom="in" aria-label={t.zoomIn}>＋</button>
+        <button class="chip-btn" type="button" data-zoom="out" aria-label={t.zoomOut}>−</button>
+        <button class="chip-btn" type="button" data-zoom="fit">{t.zoomFit}</button>
+      </div>
+      <p class="gen-legend" id="gen-legend-light">{t.legendLight}</p>
+      <p class="gen-legend" id="gen-legend-manual" hidden>{t.legendManual}</p>
+      <p class="gen-error" id="gen-error" hidden></p>
+    </div>
+
+    <div class="gen-panel">
+      <div class="gen-group">
+        <span class="gen-label">{t.steps}</span>
+        <div class="gen-row">
+          <button class="chip-btn" type="button" data-step="light" aria-pressed="true">{t.stepLight}</button>
+          <button class="chip-btn" type="button" data-step="detail" aria-pressed="false">{t.stepDetail}</button>
+          <button class="chip-btn" type="button" id="gen-undo">{t.undo}</button>
+        </div>
+      </div>
+
+      <div id="gen-light-panel" class="gen-mode-panel">
+        <div class="gen-group">
+          <span class="gen-label">{t.addSphere}</span>
+          <div class="gen-row">
+            {QUICK_DIAMETERS.map((d) => <button class="chip-btn" type="button" data-add-sphere={d}>{d}</button>)}
+          </div>
+        </div>
+        <div class="gen-group" id="gen-selection" hidden>
+          <span class="gen-label">{t.selectedSphere}</span>
+          <div class="gen-row">
+            <label class="gen-field gen-inline">
+              {t.sphereSize}
+              <select id="gen-sphere-size">
+                {diameters.map((d) => <option value={String(d)}>{d}</option>)}
+              </select>
+            </label>
+            <button class="chip-btn" type="button" id="gen-sphere-remove">{t.removeSphere}</button>
+          </div>
+        </div>
+        <div class="gen-group">
+          <span class="gen-label">{t.light}</span>
+          <div class="gen-row">
+            <button class="chip-btn" type="button" data-light-kind="point" aria-pressed="true">{t.lightPoint}</button>
+            <button class="chip-btn" type="button" data-light-kind="directional" aria-pressed="false">{t.lightDirectional}</button>
+          </div>
+          <label class="gen-range" id="gen-azimuth-row" hidden>
+            <span>{t.azimuth}</span>
+            <input type="range" id="gen-azimuth" min="0" max="359" step="1" />
+            <output id="gen-azimuth-value"></output>
+          </label>
+          <label class="gen-range">
+            <span>{t.strength}</span>
+            <input type="range" id="gen-strength" min="-3" max="3" step="0.25" />
+            <output id="gen-strength-value"></output>
+          </label>
+          <label class="gen-range" id="gen-contrast-row">
+            <span>{t.contrast}</span>
+            <input type="range" id="gen-contrast" min="0.5" max="1.5" step="0.05" />
+            <output id="gen-contrast-value"></output>
+          </label>
+          <label class="gen-range" id="gen-range-row">
+            <span>{t.range}</span>
+            <input type="range" id="gen-range" min={MIN_RANGE} max={MAX_RANGE} step="1" />
+            <output id="gen-range-value"></output>
+          </label>
+        </div>
+        <div class="gen-group">
+          <span class="gen-label">{t.shading}</span>
+          <div class="gen-row">
+            <button class="chip-btn" type="button" data-shading="gen" aria-pressed="true">{t.shadingGen}</button>
+            <button class="chip-btn" type="button" data-shading="canon" aria-pressed="false">{t.shadingCanon}</button>
+          </div>
+        </div>
+        <div class="gen-row">
+          <button class="chip-btn" type="button" data-step="detail">{t.toDetail}</button>
+          <button class="chip-btn" type="button" id="gen-light-clear">{t.clear}</button>
+        </div>
+      </div>
+
+      <div id="gen-manual-panel" class="gen-mode-panel" hidden>
+        <div class="gen-row">
+          <button class="chip-btn" type="button" data-step="light">{t.toLight}</button>
+        </div>
+        <div class="gen-group">
+          <span class="gen-label">{t.tools}</span>
+          <div class="gen-row">
+            {
+              sizes.map((n) => (
+                <button class="chip-btn" type="button" data-tool="paint" data-size={n} aria-pressed="false">
+                  {n}
+                </button>
+              ))
+            }
+            <button class="chip-btn" type="button" data-tool="erase" aria-pressed="false">{t.erase}</button>
+          </div>
+        </div>
+        <div class="gen-group">
+          <span class="gen-label">{t.stamp}</span>
+          <div class="gen-row">
+            {
+              PRESETS.map((preset) => (
+                <button class="chip-btn" type="button" data-tool="stamp" data-preset={preset.id} aria-pressed="false">
+                  {preset.label}
+                </button>
+              ))
+            }
+          </div>
+          <span class="gen-label">{t.orientation}</span>
+          <div class="gen-row">
+            <button class="chip-btn" type="button" id="gen-stamp-rotate">{t.rotate}</button>
+            <button class="chip-btn" type="button" id="gen-stamp-mirror" aria-pressed="false">{t.mirror}</button>
+            <span class="gen-hint" id="gen-orientation"></span>
+          </div>
+        </div>
+        <div class="gen-group">
+          <span class="gen-label">{t.transform}</span>
+          <div class="gen-row">
+            <button class="chip-btn" type="button" id="gen-rotate">{t.rotate}</button>
+            <button class="chip-btn" type="button" id="gen-mirror">{t.mirror}</button>
+            <button class="chip-btn" type="button" id="gen-clear">{t.clear}</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gen-group gen-fields">
+        <label class="gen-field">
+          {t.fill}
+          <select id="gen-fill">
+            {FILLS.map((f) => <option value={f.value}>{f.label}</option>)}
+          </select>
+        </label>
+        <label class="gen-field">
+          {t.background}
+          <select id="gen-bg">
+            {BACKGROUNDS.map((b) => <option value={b.value}>{b.label}</option>)}
+          </select>
+        </label>
+        <label class="gen-field">
+          {t.pngWidth}
+          <select id="gen-png-width">
+            {PNG_WIDTHS.map((w) => <option value={String(w)} selected={w === 1024}>{w}</option>)}
+          </select>
+        </label>
+        <label class="gen-field gen-check">
+          {t.sizes}
+          <input type="checkbox" id="gen-sizes" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <p class="block-label">{t.checks}</p>
+  <ul class="gen-checks" id="gen-checks"></ul>
+
+  <p class="block-label">{t.output}</p>
+  <div class="gen-output">
+    <div class="gen-row">
+      <button class="chip-btn" type="button" id="gen-copy-svg" data-copy=""><span class="copy-label">{t.copySvg}</span></button>
+      <a class="chip-btn" id="gen-svg-dl" href="#" download="kumo-sphere.svg">{t.downloadSvg}</a>
+      <button class="chip-btn" type="button" id="gen-png-dl">{t.png}</button>
+      <button class="chip-btn" type="button" id="gen-copy-link" data-copy=""><span class="copy-label">{t.copyLink}</span></button>
+    </div>
+    <label class="gen-field gen-notation">
+      {t.notation}
+      <textarea id="gen-notation" rows="3" spellcheck="false"></textarea>
+    </label>
+    <textarea class="gen-code" id="gen-svg" rows="8" readonly spellcheck="false"></textarea>
+  </div>
+  <script is:inline type="application/json" id="gen-strings" set:html={JSON.stringify(t.client)} />
+</section>
+
+<script>
+  import '../scripts/generator';
+</script>

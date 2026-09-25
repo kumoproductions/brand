@@ -38,6 +38,7 @@ Key rules for reproducing the brand:
 ## Optional
 
 - [Brand portal (HTML)](${site.href})
+- [Sphere generator](${abs('/generator')}): pick sphere diameters and a point light (or edit particles cell by cell) and get SVG with connection rules 5–6 applied; the layout is encoded in the URL hash — a light scene as L=x,y (point) or A=azimuth (directional) followed by ;R=range;S=strength;C=contrast;P=gen|canon;D=d@i,j+…, a particle pattern as rows joined by "-" ("." empty, 1–7 particle size, "~" followed by rule-6 cuts as i:j plus l|r of the upper particle)
 `;
 }
 

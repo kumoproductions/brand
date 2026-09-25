@@ -1699,3 +1699,375 @@ a.toc-row:hover span:first-child {
     grid-column: 1 / -1;
   }
 }
+
+/* --------------------------------------------------------------- generator */
+
+/* Canvas on the first six content columns, controls on the last three. */
+.gen-layout {
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: 32px;
+  margin-top: 40px;
+}
+
+.gen-layout > .gen-stage {
+  grid-column: 1 / 7;
+  min-width: 0;
+}
+
+.gen-layout > .gen-panel {
+  grid-column: 7 / -1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.gen-stage > .block-label {
+  margin-top: 0;
+}
+
+/* The plate's colours follow the chosen fill and background (set inline). */
+.gen-plate {
+  margin-top: 12px;
+  border: 1px solid #e4e4e4;
+  padding: 16px;
+  transition: background var(--dur) var(--ease);
+}
+
+.gen-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: manipulation;
+}
+
+.gen-grid line {
+  stroke: currentColor;
+  stroke-width: 0.5;
+  opacity: 0.16;
+}
+
+.gen-labels text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.gen-hover {
+  fill: none;
+  stroke: var(--kumo-sky-blue, #64add4);
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.gen-hover.is-blocked {
+  stroke: var(--danger, #c0392b);
+  stroke-dasharray: 2 2;
+}
+
+/* Joint markers: filled = connected, ring = cut under rule 6, dim = fixed. */
+.gen-joints circle {
+  fill: var(--kumo-sky-blue, #64add4);
+  stroke: var(--kumo-sky-blue, #64add4);
+  stroke-width: 1.2;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.gen-joints circle.is-cut {
+  fill: none;
+}
+
+.gen-joints circle.is-fixed {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.gen-legend {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.gen-error {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--danger, #c0392b);
+}
+
+.gen-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gen-label,
+.gen-field {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.gen-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.gen-hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  padding-left: 4px;
+}
+
+.chip-btn[aria-pressed='true'] {
+  background: var(--solid);
+  border-color: var(--solid);
+  color: var(--on-solid);
+}
+
+.gen-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.gen-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gen-field select,
+.gen-field input[type='number'],
+.gen-field textarea {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-primary);
+  background: var(--surface-page);
+  border: 1px solid var(--border-strong);
+  padding: 7px 9px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.gen-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  align-self: end;
+  padding-bottom: 9px;
+}
+
+.gen-check input {
+  accent-color: var(--accent);
+  margin: 0;
+}
+
+.section > .gen-checks {
+  grid-column: 1 / 7;
+}
+
+.gen-checks {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gen-check-item {
+  position: relative;
+  padding-left: 16px;
+  font-family: var(--font-ja);
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+
+.gen-check-item::before {
+  content: '●';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  font-size: 7px;
+  color: var(--text-secondary);
+}
+
+.gen-check-item[data-tone='ok']::before {
+  color: var(--success, #2e7d32);
+}
+
+.gen-check-item[data-tone='warn']::before {
+  color: var(--warning, #c77700);
+}
+
+.gen-output {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gen-notation textarea,
+.gen-code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.gen-code {
+  color: var(--text-secondary);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-default);
+  padding: 12px 14px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 960px) {
+  .gen-layout > .gen-stage,
+  .gen-layout > .gen-panel,
+  .section > .gen-checks {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tool pages open with their own header instead of the guideline meta bar. */
+.section.tool {
+  margin-top: 0;
+  padding-top: 44px;
+  border-top: none;
+}
+
+/* SVG elements ignore the HTML hidden attribute's UA rule. */
+.gen-hover[hidden] {
+  display: none;
+}
+
+/* Light mode: sphere rings, the draggable light, and the slider rows. */
+.gen-mode-panel {
+  display: contents;
+}
+
+.gen-mode-panel[hidden] {
+  display: none;
+}
+
+.gen-canvas.is-manual {
+  cursor: crosshair;
+}
+
+.gen-sphere {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.8;
+  stroke-dasharray: 3 3;
+  opacity: 0.25;
+}
+
+.gen-sphere.is-selected {
+  stroke: var(--kumo-sky-blue, #64add4);
+  stroke-dasharray: none;
+  stroke-width: 1.2;
+  opacity: 1;
+}
+
+.gen-light {
+  cursor: grab;
+}
+
+.gen-light circle {
+  fill: var(--kumo-sky-blue, #64add4);
+}
+
+.gen-light line {
+  stroke: var(--kumo-sky-blue, #64add4);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.gen-range {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.gen-range input {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.gen-range input:disabled {
+  opacity: 0.35;
+}
+
+.gen-range output {
+  font-size: 10.5px;
+  letter-spacing: 0;
+  text-align: right;
+  color: var(--text-primary);
+}
+
+.gen-inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.gen-inline select {
+  width: auto;
+}
+
+/* Flex groups would otherwise override the hidden attribute. */
+.gen-group[hidden] {
+  display: none;
+}
+
+/* Camera canvas: a fixed frame the zoom and pan gestures move through. */
+.gen-canvas {
+  aspect-ratio: 4 / 3;
+}
+
+.gen-zoom {
+  margin-top: 10px;
+}
+
+.gen-light .gen-beam {
+  stroke: var(--kumo-sky-blue, #64add4);
+  stroke-width: 1.2;
+  stroke-dasharray: 3 3;
+  opacity: 0.8;
+}
+
+/* Export box on the infinite grid. */
+.gen-frame {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.8;
+  stroke-dasharray: 4 3;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.gen-range[hidden] {
+  display: none;
+}

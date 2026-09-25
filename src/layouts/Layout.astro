@@ -16,6 +16,10 @@ const {
     ? 'The official brand portal of kumo.productions™. Branding Standards v1.0 — symbol, logotype, typography, color, usage examples, and design tokens.'
     : 'kumo.productions™ の公式ブランドポータル。Branding Standards v1.0 — シンボル、ロゴタイプ、タイポグラフィ、カラー、使用例、デザイントークン。',
 } = Astro.props;
+
+// Language alternates of the current page: /en/<path> ↔ /<path>.
+const jaPath = Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
+const enPath = `/en${jaPath === '/' ? '/' : jaPath}`;
 ---
 
 <!doctype html>
@@ -33,9 +37,9 @@ const {
     <meta property="og:image" content={new URL('/og.jpg', Astro.site)} />
     <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'ja_JP'} />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="alternate" hreflang="ja" href={new URL('/', Astro.site)} />
-    <link rel="alternate" hreflang="en" href={new URL('/en/', Astro.site)} />
-    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+    <link rel="alternate" hreflang="ja" href={new URL(jaPath, Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(enPath, Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(jaPath, Astro.site)} />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

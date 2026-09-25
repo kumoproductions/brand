@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from './Footer.astro';
+import Generator from './Generator.astro';
+import Sidebar from './Sidebar.astro';
+
+interface Props {
+  lang?: 'ja' | 'en';
+}
+
+const { lang = 'ja' } = Astro.props;
+const en = lang === 'en';
+const description = en
+  ? 'Compose the kumo™ symbol spheres on the prescribed grid and generate SVG that follows the construction system: particle sizes, corner radii and connection rules.'
+  : 'kumo™ シンボルのスフィアを規定グリッド上に構成し、構成システム（パーティクル寸法・角丸・接続規則）に従った SVG を生成するツール。';
+---
+
+<Layout lang={lang} title="Sphere Generator — kumo.productions™ Branding Standards" description={description}>
+  <Sidebar lang={lang} root={en ? '/en/' : '/'} tool="generator" />
+  <main class="main">
+    <div class="container">
+      <Generator lang={lang} />
+      <Footer />
+    </div>
+  </main>
+</Layout>

@@ -13,6 +13,7 @@ import SymbolSystems from './sections/SymbolSystems.astro';
 import Typography from './sections/Typography.astro';
 import UiComponents from './sections/UiComponents.astro';
 import Layout from '../layouts/Layout.astro';
+import Footer from './Footer.astro';
 import Sidebar from './Sidebar.astro';
 
 interface Props {
@@ -39,13 +40,7 @@ const { lang = 'ja' } = Astro.props;
       <Examples lang={lang} />
       <DesignTokens lang={lang} />
       <UiComponents lang={lang} />
-      <footer class="footer">
-        <img src="/assets/svg/logotype-microspace-tm.svg" alt="kumo.productions™" class="invert-on-dark" />
-        <div class="footer-meta">
-          <span class="footer-note">Branding Standards v1.0 — December 24, 2024 · <a href="/llms.txt">llms.txt</a></span>
-          <span class="footer-note">Designed by Minami Fuji (CARAVAN) · Extended by Tomoya Eguchi (kumo.productions™)</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   </main>
 </Layout>
